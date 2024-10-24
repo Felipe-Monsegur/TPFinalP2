@@ -6,7 +6,6 @@ import java.util.Map;
  *
  */
 
-//holA
 public interface IAerolinea {
 /**
 	* 1 constructor
