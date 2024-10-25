@@ -1,7 +1,10 @@
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-public class BondiJet implements IAerolinea{
+
+public class Aerolinea implements IAerolinea{
     private String nombre;
     private Integer CUIT;
     private Map<Integer, Cliente> clientes;
@@ -10,71 +13,99 @@ public class BondiJet implements IAerolinea{
     private double recaudacionTotal;
 
     // Constructor
-    public BondiJet(String nombre, Integer CUIT) {
+    public Aerolinea(String nombre, Integer CUIT) {
         this.nombre = nombre;
         this.CUIT = CUIT;
-        this.clientes = new Map<>();
-        this.aeropuertos = new Map<>();
-        this.vuelos = new Map<>();
-        this.recaudacionTotal = 0.0;
+        this.clientes =new HashMap<>();
+        this.aeropuertos = new HashMap<>();
+        this.vuelos = new HashMap<>();
     }
 
 
-    // Registrar un cliente
-    public boolean registrarCliente(String nombre, Integer telefono, Integer dni) { 
-        if (!clientes.containsKey(dni)) {
-            clientes.put(dni, new Cliente(nombre, telefono, dni));
-            return true;
+    //PAULA puse void y no boolean como en nuestra especificacion, por q en la clase IAerolinea dice void //O(1)
+    @Override
+    public void registrarCliente(int dni, String nombre, String telefono) {
+    // Verificar si el cliente ya está registrado por su DNI
+    if (clientes.containsKey(dni)) {
+        throw new IllegalArgumentException("El cliente ya está registrado.");
+    }
+    
+    // Crear un nuevo cliente
+    Cliente cliente = new Cliente(dni, nombre, telefono);
+    clientes.put(dni, cliente);
+}
+
+    //PAULA puse void y no boolean como en nuestra especificacion, por q en la clase IAerolinea dice void
+    @Override
+    public void registrarAeropuerto(String nombre, String pais, String provincia, String direccion) {
+        if (aeropuertos.containsKey(nombre)) {
+            throw new IllegalArgumentException("El aeropuerto ya está registrado.");
         }
-        return false;
+        Aeropuerto aeropuerto = new Aeropuerto(nombre, pais, provincia, direccion);
+        aeropuertos.put(nombre, aeropuerto);
     }
 
-   // Registrar un aeropuerto
-    public boolean registrarAeropuerto(String nomAeropuerto, String ubicacion, String direccion) {  
-        if (!aeropuertos.containsKey(nomAeropuerto)) {
-            aeropuertos.put(nomAeropuerto, new Aeropuerto(nomAeropuerto, ubicacion, direccion));
-            return true;
+
+
+    @Override
+    public String registrarVueloPublicoNacional(String origen, String destino, String fecha, int tripulantes, double valorRefrigerio,double[] precios, int[] cantAsientos) {
+        if (!aeropuertos.containsKey(origen) || !aeropuertos.containsKey(destino)) {
+            throw new IllegalArgumentException("El aeropuerto de origen o destino no esta registrado");
         }
-        return false;
+        if (!aeropuertos.get(origen).getPais().equals("Argentina") || !aeropuertos.get(destino).getPais().equals("Argentina")) {
+            throw new IllegalArgumentException("Los vuelos nacionales deben tener origen y destino en Argentina.");
+        }
+
+        int contVuelosPublicos;
+        // Generar codigo del vuelo
+        contVuelosPublicos++;
+        String codVuelo = contVuelosPublicos + "-PUB";
+
+        // Crear vuelo y añadirlo al registro
+        Vuelo vuelo = new Vuelo(codVuelo, origen, destino, fecha, tripulantes, valorRefrigerio, precios, cantAsientos);
+        vuelos.put(codVuelo, vuelo);
+        return codVuelo;
     }
 
-     // Crear vuelo público nacional
-     public void crearVueloPublicoNacional(int codigo, String destino, int asientos, int capSec1, int capSec2, double precioSec1, double precioSec2) {
-     }
-
-     // Crear vuelo público internacional
-    public void crearVueloPublicoInternacional(int codigo, String destino, int asientos, int capSec1, int capSec2, int capSec3, double precioSec1, double precioSec2, double precioSec3, boolean escala) {
+    
+    @Override
+     public String registrarVueloPublicoInternacional(String origen, String destino, String fecha, int tripulantes, double valorRefrigerio, int cantRefrigerios, double[] precios,  int[] cantAsientos,  String[] escalas){
     }
 
-     // Registrar vuelo privado
-     public boolean registrarVueloPrivado(int codigo, String destino, int asientos, Integer DNIcomprador, List<Integer> DNIpasajeros) {
-        if (!clientes.containsKey(DNIcomprador) || !clientes.keySet().containsAll(DNIpasajeros)) {
-            return false;
+
+    @Override
+    public String VenderVueloPrivado(String origen, String destino, String fecha, int tripulantes, double precio, int dniComprador, int[] acompaniantes) {
+        // Validar aeropuertos para vuelos privados
+        if (!aeropuertos.containsKey(origen) || !aeropuertos.containsKey(destino)) {
+            throw new IllegalArgumentException("El aeropuerto de origen o destino no está registrado.");
         }
-        if (!aeropuertos.containsKey(destino) || !aeropuertos.get(destino).esDestinoNacional()) {
-            return false;
-        }
-        vuelos.put(codigo, new VueloPrivado(codigo, destino, asientos, DNIcomprador, DNIpasajeros));
-        return true;
+
+        // Generar código de vuelo privado
+        contVuelosPrivados++;
+        String codVuelo = contVuelosPrivados + "-PRI";
+
+        // Crear vuelo privado y añadirlo al registro
+        Vuelo vueloPrivado = new VueloPrivado(codVuelo, origen, destino, fecha, tripulantes, precio, dniComprador, acompaniantes);
+        vuelos.put(codVuelo, vueloPrivado);
+        return codVuelo;
     }
 
      // Consultar asientos disponibles
-     public int consultarAsientosDisponibles(int codigoVuelo) {
+     public int consultarAsientosDisponibles(int codVuelo) {
      }
 
-     // Vender pasaje para vuelo nacional
-    public boolean venderPasajeVueloNacional(Integer DNI, Integer codigo, Integer numAsiento) {
+     // Vender pasaje para vuelo Nacional e Internacional
+    public boolean /*int*/ venderPasaje(int dni, String codVuelo, int nroAsiento, boolean aOcupar) {
     }
 
-    // Vender pasaje para vuelo Internacionjal
-    public boolean venderPasajeVueloInternacional(Integer DNI, Integer codigo, Integer numAsiento) {
-    }
 
     // Vender vuelo Privado
     public boolean venderVueloPrivado(Integer DNIcomprador,List<Integer>DNIpasajeros){
     }
 
-    //Consultar vuelos segun fehca y destino
+    
+    @Override
+    //Consultar vuelos similares
     public List<Vuelo> consultarVuelos(String fecha, String origen, String destino) {
         List<Vuelo> vuelosSimilares = new List<>();
         for (Vuelo vuelo : vuelos.values()) {
@@ -85,11 +116,27 @@ public class BondiJet implements IAerolinea{
         return vuelosSimilares;
     }
 
-     // Cancelar pasaje
-     public boolean cancelarPasaje(Integer DNIpasajero, int codigoVuelo, int nroAsiento) {
+
+    @Override
+     // Cancelar pasaje //PAULA nosotros pusimos booolean pero pide q sea void
+     public void /*boolean */ void cancelarPasaje(int dni, String codVuelo, int nroAsiento) {
      }
 
+     @Override
+     public  void /*boolean */ cancelarPasaje(int dni, int codPasaje){
+     }
+     
+     @Override
+     List<String> cancelarVuelo(String codVuelo){
+
+     }
+     @Override
       // Calcular total recaudado en pasajes a un destino específico
-    public double totalRecaudadoPasajes(String destino) {
+    public double totalRecaudado(String destino) {
+    }
+
+    @Override
+    public String detalleDeVuelo(String codVuelo){
+
     }
 }
