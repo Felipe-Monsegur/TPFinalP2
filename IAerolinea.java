@@ -11,7 +11,6 @@ public interface IAerolinea {
 	* 1 constructor
 	* Aerolinea(String nombre, String CUIT);
 */
-
 	/**
 	* - 2
 	* Se registran los clientes de la Aerolínea, compren o no pasaje. 
