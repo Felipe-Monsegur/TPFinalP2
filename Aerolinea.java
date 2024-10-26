@@ -16,6 +16,7 @@ public class Aerolinea implements IAerolinea {
 	double = precio total
 	*/ 
 
+	//ejercicio 1
 	public Aerolinea(String nombre, String CUIT) {
 		this.nombre = nombre;
 		this.CUIT = CUIT;
@@ -24,6 +25,7 @@ public class Aerolinea implements IAerolinea {
 		this.vuelos = new HashMap<>();
 	}
 
+	//ejercicio 2
 	@Override
 	public void registrarCliente(int dni, String nombre, String telefono) {
 		// Verificar si el cliente ya está registrado por su DNI
@@ -36,6 +38,7 @@ public class Aerolinea implements IAerolinea {
 		clientes.put(dni, cliente);
 	}
 
+	//ejercicio 3
 	@Override
 	public void registrarAeropuerto(String nombre, String pais, String provincia, String direccion) {
 		if (aeropuertos.containsKey(nombre)) {
@@ -45,8 +48,9 @@ public class Aerolinea implements IAerolinea {
 		aeropuertos.put(nombre, aeropuerto);
 	}
 
-	//esta bien pero lo comente hasta que terminemos lo de las clases de vuelo (no quiero que aparezca con error ajajjs)
+	//ejercicio 4
 	
+	//esta bien pero lo comente hasta que terminemos lo de las clases de vuelo (no quiero que aparezca con error ajajjs)
 	@Override
 	public String registrarVueloPublicoNacional(String origen, String destino, String fecha, int tripulantes,
 			double valorRefrigerio, double[] precios, int[] cantAsientos) {
@@ -110,6 +114,8 @@ public class Aerolinea implements IAerolinea {
 	@Override
 	public List<String> consultarVuelosSimilares(String origen, String destino, String fecha){
 		List<String> vuelosSimilares = new ArrayList<>();
+		//falta que los vuelos esten entre la fecha pasada hasta 1 semana despues
+		
 		for (Vuelo vuelo : vuelos.values()) {
 			if (vuelo.getFecha().equals(fecha) && vuelo.getOrigen().equals(origen)
 					&& vuelo.getDestino().equals(destino)) {
