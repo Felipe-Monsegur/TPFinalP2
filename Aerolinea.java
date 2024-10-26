@@ -15,8 +15,7 @@ public class Aerolinea implements IAerolinea {
 	no sé con que criterio se debe dar el numero de codigo, si se trata de un num aleatorio o es secuencialmente.
 	por el momento hice eso, igual ACLARO no me parece correcto 
 	
-	ademas esta mal porque nunca se actualiza. En caso de que se ingresen vuelos siempre es el mismo numero,
-	asi que es temporal no mas, era mas que nada para ver si pasaba los test 
+	Es temporal, mas que nada para ver si las funciones pasaban los test 
 	
 	*/
 	
