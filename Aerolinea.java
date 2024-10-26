@@ -121,6 +121,7 @@ public class Aerolinea implements IAerolinea {
 		return codVuelo;
 	}
 	
+	//ejercicio 7
 	@Override
 	public Map<Integer, String> asientosDisponibles(String codVuelo){
 		return null;
