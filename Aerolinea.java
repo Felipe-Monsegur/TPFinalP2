@@ -50,14 +50,14 @@ public class Aerolinea implements IAerolinea {
 	@Override
 	public String registrarVueloPublicoNacional(String origen, String destino, String fecha, int tripulantes,
 			double valorRefrigerio, double[] precios, int[] cantAsientos) {
-//		if (!aeropuertos.containsKey(origen) || !aeropuertos.containsKey(destino)) {
-//			throw new IllegalArgumentException("El aeropuerto de origen o destino no esta registrado");
-//		}
-//		if (!aeropuertos.get(origen).getPais().equals("Argentina")
-//				|| !aeropuertos.get(destino).getPais().equals("Argentina")) {
-//			throw new IllegalArgumentException("Los vuelos nacionales deben tener origen y destino en Argentina.");
-//		}
-//
+		if (!aeropuertos.containsKey(origen) || !aeropuertos.containsKey(destino)) {
+			throw new IllegalArgumentException("El aeropuerto de origen o destino no esta registrado");
+		}
+		if (!aeropuertos.get(origen).getPais().equals("Argentina")
+				|| !aeropuertos.get(destino).getPais().equals("Argentina")) {
+			throw new IllegalArgumentException("Los vuelos nacionales deben tener origen y destino en Argentina.");
+		}
+		
 //		int contVuelosPublicos;
 //		// Generar codigo del vuelo
 //		contVuelosPublicos++;
@@ -79,11 +79,11 @@ public class Aerolinea implements IAerolinea {
 	@Override
 	public String VenderVueloPrivado(String origen, String destino, String fecha, int tripulantes, double precio,
 			int dniComprador, int[] acompaniantes) {
-//		// Validar aeropuertos para vuelos privados
-//		if (!aeropuertos.containsKey(origen) || !aeropuertos.containsKey(destino)) {
-//			throw new IllegalArgumentException("El aeropuerto de origen o destino no está registrado.");
-//		}
-//
+		// Validar aeropuertos para vuelos privados
+		if (!aeropuertos.containsKey(origen) || !aeropuertos.containsKey(destino)) {
+			throw new IllegalArgumentException("El aeropuerto de origen o destino no está registrado.");
+		}
+
 //		// Generar código de vuelo privado
 //		contVuelosPrivados++;
 //		String codVuelo = contVuelosPrivados + "-PRI";
@@ -106,17 +106,17 @@ public class Aerolinea implements IAerolinea {
 		return 0;
 	}
     
+	//ejercicio 11
 	@Override
-	public List<String> consultarVuelosSimilares(String origen, String destino, String Fecha){
-//		List<String> vuelosSimilares = new List<>();
-//		for (Vuelo vuelo : vuelos.values()) {
-//			if (vuelo.getFecha().equals(fecha) && vuelo.getOrigen().equals(origen)
-//					&& vuelo.getDestino().equals(destino)) {
-//				vuelosSimilares.add(vuelo);
-//			}
-//		}
-//		return vuelosSimilares;
-		return null;
+	public List<String> consultarVuelosSimilares(String origen, String destino, String fecha){
+		List<String> vuelosSimilares = new ArrayList<>();
+		for (Vuelo vuelo : vuelos.values()) {
+			if (vuelo.getFecha().equals(fecha) && vuelo.getOrigen().equals(origen)
+					&& vuelo.getDestino().equals(destino)) {
+				vuelosSimilares.add(vuelo.getCodigo());
+			}
+		}
+		return vuelosSimilares;
 	}
 
 	@Override

@@ -9,6 +9,8 @@ public class VueloPublico extends Vuelo {
 	public VueloPublico(String origen, String destino, String fecha, int tripulantes,
 			double valorRefrigerio, double[] precios, int[] cantAsientos) {
 		super(origen, destino, fecha, tripulantes);
+		
+		this.valorRefrigerio = valorRefrigerio;
 		//inicializar lo correspondiente a vuelo publico
 	}
 
