@@ -86,7 +86,20 @@ public class Aerolinea implements IAerolinea {
 	@Override
 	public String registrarVueloPublicoInternacional(String origen, String destino, String fecha, int tripulantes,
 			double valorRefrigerio, int cantRefrigerios, double[] precios, int[] cantAsientos, String[] escalas) {
-		return null;
+		if (!aeropuertos.containsKey(origen) || !aeropuertos.containsKey(destino)) {
+			throw new IllegalArgumentException("El aeropuerto de origen o destino no esta registrado");
+		}
+		
+		//se podria verificar que los destinos de la escala sean validos y algunas otras cosas
+		
+		// Generar codigo del vuelo
+		this.contVuelos++;
+		String codVuelo = contVuelos + "-PUB";
+
+		// Crear vuelo y añadirlo al registro
+		Vuelo vuelo = new VueloInternacional(codVuelo, origen, destino, fecha, tripulantes, valorRefrigerio, cantRefrigerios, precios, cantAsientos, escalas);
+		vuelos.put(codVuelo, vuelo);
+		return codVuelo;
 	}
 
 	//ejercicio 6
