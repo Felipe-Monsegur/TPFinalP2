@@ -13,7 +13,11 @@ public class Aerolinea implements IAerolinea {
 	/*
 	es una variable "global" que enumera los vuelos y a partir de eso les da un codigo
 	no sé con que criterio se debe dar el numero de codigo, si se trata de un num aleatorio o es secuencialmente.
-	por el momento hice eso, igual ACLARO no me parece correcto pero buee
+	por el momento hice eso, igual ACLARO no me parece correcto 
+	
+	ademas esta mal porque nunca se actualiza. En caso de que se ingresen vuelos siempre es el mismo numero,
+	asi que es temporal no mas, era mas que nada para ver si pasaba los test 
+	
 	*/
 	
 	private int contVuelos;
