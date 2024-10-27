@@ -135,9 +135,12 @@ public class Aerolinea implements IAerolinea {
 		return 0;
 	}
     
+	//ejercicio 11
 	@Override
 	public List<String> consultarVuelosSimilares(String origen, String destino, String fecha) {
 	    List<String> vuelosSimilares = new ArrayList<>();
+	    
+	    //paso la fecha a localDate para manejarla con las funciones propias de la clase
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	    LocalDate fechaDada = LocalDate.parse(fecha, formatter);
 	    LocalDate fechaLimite = fechaDada.plusDays(7);
