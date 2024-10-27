@@ -1,5 +1,7 @@
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -127,26 +129,32 @@ public class Aerolinea implements IAerolinea {
 		return null;
 	}
 	
+	//ejercicio 8
 	@Override
 	public int venderPasaje(int dni, String codVuelo, int nroAsiento, boolean aOcupar) {
 		return 0;
 	}
     
-	//ejercicio 11
 	@Override
-	public List<String> consultarVuelosSimilares(String origen, String destino, String fecha){
-		List<String> vuelosSimilares = new ArrayList<>();
-		//falta que los vuelos esten entre la fecha pasada hasta 1 semana despues
-		
-		for (Vuelo vuelo : vuelos.values()) {
-			if (vuelo.getFecha().equals(fecha) && vuelo.getOrigen().equals(origen)
-					&& vuelo.getDestino().equals(destino)) {
-				vuelosSimilares.add(vuelo.getCodigo());
-			}
-		}
-		return vuelosSimilares;
-	}
+	public List<String> consultarVuelosSimilares(String origen, String destino, String fecha) {
+	    List<String> vuelosSimilares = new ArrayList<>();
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	    LocalDate fechaDada = LocalDate.parse(fecha, formatter);
+	    LocalDate fechaLimite = fechaDada.plusDays(7);
 
+	    for (Vuelo vuelo : vuelos.values()) {
+	        LocalDate fechaVuelo = LocalDate.parse(vuelo.getFecha(), formatter);
+	        
+	        if (vuelo.getOrigen().equals(origen) &&
+	            vuelo.getDestino().equals(destino) &&
+	            (fechaVuelo.isAfter(fechaDada.minusDays(1)) && fechaVuelo.isBefore(fechaLimite.plusDays(1)))) {
+	            
+	            vuelosSimilares.add(vuelo.getCodigo());
+	        }
+	    }
+	    return vuelosSimilares;
+	}
+	
 	@Override
 	public void cancelarPasaje(int dni, String codVuelo, int nroAsiento) {
 	}

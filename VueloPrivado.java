@@ -12,6 +12,8 @@ public class VueloPrivado extends Vuelo {
 		super(codigo, origen, destino, fecha, tripulantes);
 		this.precioJet = precio;
 		this.dniComprador = dniComprador;
+		
+		//iniciar lo correspondiente para vuelo privado
 	}
 
 }
