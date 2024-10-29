@@ -6,7 +6,6 @@ public abstract class Vuelo {
 	private String fecha;
 	private int tripulantes;
 
-	//creo que no hay que inicializar nada mas CREO
 	public Vuelo(String codigo, String origen, String destino, String fecha, int tripulates) {
 		this.codigo = codigo;
 		this.origen = origen;
@@ -30,5 +29,5 @@ public abstract class Vuelo {
 	public String getCodigo() {
 		return codigo;
 	}
-	
+
 }

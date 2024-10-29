@@ -13,8 +13,7 @@ public class Aerolinea implements IAerolinea {
 	private Map<String, Vuelo> vuelos;
 	
 	/*
-	es una variable "global" que enumera los vuelos y a partir de eso les da un codigo
-	no sé con que criterio se debe dar el numero de codigo, si se trata de un num aleatorio o es secuencialmente.
+	no sé con que criterio se debe dar el numero de codigo, si se trata de un num aleatorio o es secuencialmente
 	por el momento hice eso, igual ACLARO no me parece correcto 
 	
 	Es temporal, mas que nada para ver si las funciones pasaban los test 
@@ -132,6 +131,14 @@ public class Aerolinea implements IAerolinea {
 	//ejercicio 8
 	@Override
 	public int venderPasaje(int dni, String codVuelo, int nroAsiento, boolean aOcupar) {
+		if (!clientes.containsKey(dni)) {
+			throw new IllegalArgumentException("El cliente no está registrado en el sistema.");
+		}
+		if(!vuelos.containsKey(codVuelo)) {
+			throw new IllegalArgumentException("El vuelo no existe");
+		}
+		
+		//completar..
 		return 0;
 	}
     
