@@ -13,5 +13,10 @@ public class VueloPublico extends Vuelo {
 		this.valorRefrigerio = valorRefrigerio;
 		//inicializar lo correspondiente a vuelo publico
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString();
+	}
 
 }

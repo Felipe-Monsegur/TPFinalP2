@@ -100,6 +100,7 @@ public class Principal {
         // Detalle del vuelo privado
         String detalleVueloPrivado = aerolinea.detalleDeVuelo(codVueloPrivado);
         System.out.println("Detalle del vuelo privado (3 jets): " + detalleVueloPrivado);
+        
         boolean error=false;
         try {
         	// Consultar asientos disponibles del vuelo privado debe generar un error.

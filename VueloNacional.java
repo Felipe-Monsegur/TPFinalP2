@@ -6,5 +6,10 @@ public class VueloNacional extends VueloPublico{
 		super(codigo, origen, destino, fecha, tripulantes, valorRefrigerio, precios, cantAsientos);
 		//inicializar lo correspondiente a vuelo nacional
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString()+" - NACIONAL";
+	}
 
 }

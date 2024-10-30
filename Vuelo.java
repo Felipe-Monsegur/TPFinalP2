@@ -29,5 +29,9 @@ public abstract class Vuelo {
 	public String getCodigo() {
 		return codigo;
 	}
+	
+	public String toString() {
+		return getCodigo()+" - "+getOrigen()+" - "+getDestino()+" - "+getFecha();
+	}
 
 }

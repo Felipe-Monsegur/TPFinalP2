@@ -173,8 +173,15 @@ public class Aerolinea implements IAerolinea {
 		return 0;
 	}
 
+
 	@Override
 	public String detalleDeVuelo(String codVuelo) {
-		return null;
+	    Vuelo vuelo = vuelos.get(codVuelo);
+
+	    if (!vuelos.containsKey(codVuelo)) {
+	        throw new IllegalArgumentException("El vuelo con el código " + codVuelo + " no existe.");
+	    }
+
+	    return vuelo.toString(); // llama al metodo toString de la clase
 	}
 }

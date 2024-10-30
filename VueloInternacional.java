@@ -10,5 +10,10 @@ public class VueloInternacional extends VueloPublico{
 		this.cantRefrigerios = cantRefrigerios;
 		//inicializar lo correspondiente a vuelo internacional
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString()+" - INTERNACIONAL";
+	}
 
 }
