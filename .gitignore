@@ -4,3 +4,13 @@
 .project
 .classpath
 .gitignore
+/Aerolinea.class
+/Aeropuerto.class
+/Cliente.class
+/Vuelo.class
+/AerolineaTest.class
+/Pasaje.class
+/VueloPrivado.class
+/VueloPublico.class
+/VueloInternacional.class
+/VueloNacional.class
