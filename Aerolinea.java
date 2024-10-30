@@ -13,16 +13,6 @@ public class Aerolinea implements IAerolinea {
 	private Map<String, Vuelo> vuelos;
 	
 	/*
-	no sé con que criterio se debe dar el numero de codigo, si se trata de un num aleatorio o es secuencialmente
-	por el momento hice eso, igual ACLARO no me parece correcto 
-	
-	Es temporal, mas que nada para ver si las funciones pasaban los test 
-	
-	*/
-	
-	private int contVuelos;
-	
-	/*
 	es para la parte del enunciado que nos pide conocer el total recaudado dado un destino
 	private Map<String, double> recaudacionTotal;
 	String = nombre destino
@@ -74,8 +64,8 @@ public class Aerolinea implements IAerolinea {
 		}
 
 		// Generar codigo del vuelo
-		this.contVuelos++;
-		String codVuelo = contVuelos + "-PUB";
+		int nroVuelo = vuelos.size() + 1;
+		String codVuelo = nroVuelo + "-PUB";
 
 		// Crear vuelo y añadirlo al registro
 		Vuelo vuelo = new VueloNacional(codVuelo, origen, destino, fecha, tripulantes, valorRefrigerio, precios, cantAsientos);
@@ -94,8 +84,8 @@ public class Aerolinea implements IAerolinea {
 		//se podria verificar que los destinos de la escala sean validos y algunas otras cosas
 		
 		// Generar codigo del vuelo
-		this.contVuelos++;
-		String codVuelo = contVuelos + "-PUB";
+		int nroVuelo = vuelos.size() + 1;
+		String codVuelo = nroVuelo + "-PUB";
 
 		// Crear vuelo y añadirlo al registro
 		Vuelo vuelo = new VueloInternacional(codVuelo, origen, destino, fecha, tripulantes, valorRefrigerio, cantRefrigerios, precios, cantAsientos, escalas);
@@ -113,8 +103,8 @@ public class Aerolinea implements IAerolinea {
 		}
 
 		// Generar código de vuelo privado
-		contVuelos++;
-		String codVuelo = contVuelos + "-PRI";
+		int nroVuelo = vuelos.size() + 1;
+		String codVuelo = nroVuelo + "-PRI";
 
 		// Crear vuelo privado y añadirlo al registro
 		Vuelo vueloPrivado = new VueloPrivado(codVuelo, origen, destino, fecha, tripulantes, precio, dniComprador, acompaniantes);
