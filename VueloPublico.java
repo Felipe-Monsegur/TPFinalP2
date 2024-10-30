@@ -19,4 +19,8 @@ public class VueloPublico extends Vuelo {
 		return super.toString();
 	}
 
+	public int venderPasaje(int numPasaje, int dni, int nroAsiento, boolean aOcupar) {
+		return 0;
+	}
+	
 }
