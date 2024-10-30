@@ -120,9 +120,6 @@ public class Aerolinea implements IAerolinea {
 	
 	//ejercicio 8
 	@Override
-	
-	//es una idea de como se deberia hacer
-	//la parte del pasaje era para ver si pasaba el test nada mas
 	public int venderPasaje(int dni, String codVuelo, int nroAsiento, boolean aOcupar) {
 	    if (!clientes.containsKey(dni)) {
 	        throw new IllegalArgumentException("El cliente no está registrado en el sistema.");
@@ -130,7 +127,10 @@ public class Aerolinea implements IAerolinea {
 	    if (!vuelos.containsKey(codVuelo)) {
 	        throw new IllegalArgumentException("El vuelo no existe.");
 	    }
-//
+	    
+		//es una idea de como se deberia hacer
+		//la parte del pasaje era para ver si pasaba el test nada mas
+	    
 //	    Vuelo vuelo = vuelos.get(codVuelo);
 //	    int numPasaje = 5;// Inicializar el número de pasaje
 //
