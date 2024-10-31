@@ -239,7 +239,8 @@ public class Aerolinea implements IAerolinea {
 						try {
 							vueloAlt.venderPasaje(dniPasajero, asiento.getKey(), true);
 							reprogramado = true;
-							resultados.add(formatearResultado(cliente, vueloAlt.getCodigo()));
+							String registro = dniPasajero + " - " + cliente.getNombre() + " - " + cliente.getTelefono() + " - " + vueloAlt.getCodigo();
+                        	resultados.add(registro);
 							break;
 						} catch (Exception e) {
 							continue;
@@ -250,11 +251,12 @@ public class Aerolinea implements IAerolinea {
 			}
 	
 			if (!reprogramado) {
-				resultados.add(formatearResultado(cliente, " - CANCELADO"));
+				String registro = dniPasajero + " - " + cliente.getNombre() + " - " + cliente.getTelefono() + " - CANCELADO";
+				resultados.add(registro);
 			}
 		}
 	
-		// Eliminar el vuelo cancelado
+		// Elimina el vuelo cancelado
 		vuelos.remove(codVuelo);
 		return resultados;
 	}
