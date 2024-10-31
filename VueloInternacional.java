@@ -8,7 +8,7 @@ public class VueloInternacional extends VueloPublico{
 		super(codigo, origen, destino, fecha, tripulantes, valorRefrigerio, precios, cantAsientos);
 		
 		this.cantRefrigerios = cantRefrigerios;
-		//inicializar lo correspondiente a vuelo internacional
+		this.escalas = escalas;
 	}
 	
 	@Override
