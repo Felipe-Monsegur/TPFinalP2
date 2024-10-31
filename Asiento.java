@@ -23,17 +23,24 @@ public class Asiento {
 	public Integer getSeccion() {
 		return seccion;
 	}
-	
+	public Double getPrecio(){
+		return precio;
+	}
+
 	public boolean getVendido() {
 		return vendido;
 	}
 	
 	//provisorio
-	public void liberar() {
+	public void liberar() {	
 		this.vendido = false;
+		this.ocupado = false;
 	}
 	public void vender() {
 		this.vendido = true;
+	}
+	public void ocupar() {
+		this.ocupado = true;
 	}
 	
 }

@@ -19,7 +19,10 @@ public class VueloPrivado extends Vuelo {
         this.cantidadJets = (int) Math.ceil((double) totalPasajeros / capacidadMaxima);
         this.valor = this.cantidadJets * precioJet;
 	}
-	
+
+	public double getValor(){
+		return valor;
+	}
 	public int getCantidadJets() {
 		return cantidadJets;
 	}
