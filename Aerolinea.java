@@ -182,26 +182,63 @@ public class Aerolinea implements IAerolinea {
 		return vuelosSimilares;
 	}
 
-	@Override
-	// Es provisorio, hay que modificarlo
-	public void cancelarPasaje(int dni, String codVuelo, int nroAsiento) {
-		if (!clientes.containsKey(dni)) {
-			throw new IllegalArgumentException("El cliente no está registrado en el sistema.");
-		}
-		if (!vuelos.containsKey(codVuelo)) {
-			throw new IllegalArgumentException("El vuelo no existe.");
-		}
-		Vuelo vuelo = vuelos.get(codVuelo);
-		if (!(vuelo instanceof VueloPublico)) {
-			throw new IllegalArgumentException("El vuelo no es de tipo público y no permite cancelaciones de esta manera.");
-		}
-	
-		VueloPublico vueloPublico = (VueloPublico) vuelo;
-		vueloPublico.cancelarPasaje(dni);
-	}
+	// @Override
+	// // Es provisorio, hay que modificarlo
+	// public void cancelarPasaje(int dni, String codVuelo, int nroAsiento) {
+	// 	if (!clientes.containsKey(dni)) {
+	// 		throw new IllegalArgumentException("El cliente no está registrado en el sistema.");
+	// 	}
+	// 	if (!vuelos.containsKey(codVuelo)) {
+	// 		throw new IllegalArgumentException("El vuelo no existe.");
+	// 	}
+	// 	Vuelo vuelo = vuelos.get(codVuelo);
+	// 	if (!(vuelo instanceof VueloPublico)) {
+	// 		throw new IllegalArgumentException(
+	// 				"El vuelo no es de tipo público y no permite cancelaciones de esta manera.");
+	// 	}
 
+	// 	VueloPublico vueloPublico = (VueloPublico) vuelo;
+	// 	vueloPublico.cancelarPasaje(dni);
+	// }
+
+	// Ejercicio 12
+	//Arreglar lo de liberar el asiento luego de cancelar el pasajr
 	@Override
 	public void cancelarPasaje(int dni, int codPasaje) {
+		Cliente cliente = clientes.get(dni);
+		if (cliente == null) {
+			throw new IllegalArgumentException("El cliente con DNI " + dni + " no existe.");
+		}
+
+	
+		boolean pasajeEncontrado = false;
+		for (Vuelo vuelo : vuelos.values()) {
+			Map<Integer, Pasaje> pasajes = vuelo.getPasajes();
+
+			// Si el vuelo contiene el pasaje
+			if (pasajes.containsKey(codPasaje)) {
+				Pasaje pasaje = pasajes.get(codPasaje);
+
+				// Verificar que el pasaje pertenece al cliente con el DNI dado
+				if (pasaje.getDNIcliente() != dni) {
+					throw new IllegalArgumentException("El pasaje no pertenece al cliente" + dni);
+				}
+
+				
+				pasajes.remove(codPasaje);
+				//FALTA liberar el asiento de ese pasaje
+
+				pasajeEncontrado = true;
+				System.out.println(
+						"Pasaje " + codPasaje + " cancelado por el cliente" + dni);
+				break;
+			}
+		}
+
+		if (!pasajeEncontrado) {
+			throw new IllegalArgumentException(
+					"No se encontró el pasaje " + codPasaje + " para el cliente " + dni +);
+		}
 	}
 
 	// Ejercicio 13
@@ -210,71 +247,70 @@ public class Aerolinea implements IAerolinea {
 		if (!vuelos.containsKey(codVuelo)) {
 			throw new IllegalArgumentException("El vuelo no existe");
 		}
-	
+
 		List<String> resultados = new ArrayList<>();
 		Vuelo vueloCancelado = vuelos.get(codVuelo);
 		String destinoCancelado = vueloCancelado.getDestino();
 		Map<Integer, Pasaje> pasajesAfectados = vueloCancelado.getPasajes();
-	
+
 		List<VueloPublico> vuelosAlternativos = new ArrayList<>();
 		for (Map.Entry<String, Vuelo> entry : vuelos.entrySet()) {
-			if (!entry.getKey().equals(codVuelo) && 
-				entry.getValue().getDestino().equals(destinoCancelado) && 
-				entry.getValue() instanceof VueloPublico) {
-				vuelosAlternativos.add((VueloPublico)entry.getValue());
+			if (!entry.getKey().equals(codVuelo) &&
+					entry.getValue().getDestino().equals(destinoCancelado) &&
+					entry.getValue() instanceof VueloPublico) {
+				vuelosAlternativos.add((VueloPublico) entry.getValue());
 			}
 		}
-	
 
 		for (Pasaje pasaje : pasajesAfectados.values()) {
 			boolean reprogramado = false;
 			int dniPasajero = pasaje.getDNIcliente();
 			Cliente cliente = clientes.get(dniPasajero);
-	
+
 			for (VueloPublico vueloAlt : vuelosAlternativos) {
 				Map<Integer, String> asientosDisp = vueloAlt.asientosDisponibles();
-	
+
 				for (Map.Entry<Integer, String> asiento : asientosDisp.entrySet()) {
 					if (vueloAlt.mismaOmejorSeccion(asiento.getKey(), convertirSeccionANumero(pasaje.getSeccion()))) {
 						try {
 							vueloAlt.venderPasaje(dniPasajero, asiento.getKey(), true);
 							reprogramado = true;
-							String registro = dniPasajero + " - " + cliente.getNombre() + " - " + cliente.getTelefono() + " - " + vueloAlt.getCodigo();
-                        	resultados.add(registro);
+							String registro = dniPasajero + " - " + cliente.getNombre() + " - " + cliente.getTelefono()
+									+ " - " + vueloAlt.getCodigo();
+							resultados.add(registro);
 							break;
 						} catch (Exception e) {
 							continue;
 						}
 					}
 				}
-				if (reprogramado) break;
+				if (reprogramado)
+					break;
 			}
-	
+
 			if (!reprogramado) {
-				String registro = dniPasajero + " - " + cliente.getNombre() + " - " + cliente.getTelefono() + " - CANCELADO";
+				String registro = dniPasajero + " - " + cliente.getNombre() + " - " + cliente.getTelefono()
+						+ " - CANCELADO";
 				resultados.add(registro);
 			}
 		}
-	
+
 		// Elimina el vuelo cancelado
 		vuelos.remove(codVuelo);
 		return resultados;
 	}
-	
-	private String formatearResultado(Cliente cliente, String resultado) {
-		return String.format(cliente.getDni() + " - " + cliente.getNombre() +" - "+cliente.getTelefono()+" - "+resultado,
-			cliente.getDni(),
-			cliente.getNombre(),
-			cliente.getTelefono(),
-			resultado);
-	}
+
 
 	private int convertirSeccionANumero(String seccion) {
 		switch (seccion.toLowerCase()) {
-			case "turista": return 0;
-			case "ejecutivo": return 1;
-			case "primera clase": return 2;
-			default: throw new IllegalArgumentException("Sección desconocida: " + seccion);
+			case "turista":
+				return 0;
+			case "ejecutivo":
+				return 1;
+			case "primera clase":
+				return 2;
+			default:
+				throw new IllegalArgumentException("Sección desconocida: " + seccion);
 		}
 	}
 
