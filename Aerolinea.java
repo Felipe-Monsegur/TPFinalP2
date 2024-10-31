@@ -115,7 +115,16 @@ public class Aerolinea implements IAerolinea {
 	//ejercicio 7
 	@Override
 	public Map<Integer, String> asientosDisponibles(String codVuelo){
-		return null;
+	    if (!vuelos.containsKey(codVuelo)) {
+	        throw new IllegalArgumentException("El vuelo no existe.");
+	    }
+	    
+	    Vuelo vuelo=vuelos.get(codVuelo);
+	    if(vuelo instanceof VueloPublico) {
+	    	VueloPublico vueloPublico = (VueloPublico) vuelo;
+	    	return vueloPublico.asientosDisponibles();
+	    }
+	    throw new IllegalArgumentException("No es posible con vuelos privados.");
 	}
 	
 	//ejercicio 8
@@ -167,7 +176,18 @@ public class Aerolinea implements IAerolinea {
 	}
 	
 	@Override
+	// es provisorio, hay que modificarlo
 	public void cancelarPasaje(int dni, String codVuelo, int nroAsiento) {
+	    if (!clientes.containsKey(dni)) {
+	        throw new IllegalArgumentException("El cliente no está registrado en el sistema.");
+	    }
+	    if (!vuelos.containsKey(codVuelo)) {
+	        throw new IllegalArgumentException("El vuelo no existe.");
+	    }
+	    Vuelo vuelo = vuelos.get(codVuelo);
+	    VueloPublico vueloPublico = (VueloPublico) vuelo;
+	    
+	    vueloPublico.cancelarPasaje(dni, nroAsiento);
 	}
 
 	@Override

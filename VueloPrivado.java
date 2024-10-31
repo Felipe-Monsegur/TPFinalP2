@@ -2,7 +2,7 @@
 public class VueloPrivado extends Vuelo {
 	private double precioJet;
 	private int dniComprador;
-	private static final int capacidadMaxima = 15;
+	private final static int capacidadMaxima = 15;
 	private int[] acompaniantes;
 	private int cantidadJets;
 	private double valor;
