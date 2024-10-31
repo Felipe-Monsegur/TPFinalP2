@@ -250,7 +250,7 @@ public class Aerolinea implements IAerolinea {
 			}
 	
 			if (!reprogramado) {
-				resultados.add(formatearResultado(cliente, "CANCELADO"));
+				resultados.add(formatearResultado(cliente, " - CANCELADO"));
 			}
 		}
 	
