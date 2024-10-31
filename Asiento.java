@@ -4,11 +4,13 @@ public class Asiento {
 	private double precio;
 	private Integer seccion;
 	private boolean ocupado;
+	private boolean vendido;
 
 	public Asiento(Integer nroAsiento, double precio, Integer seccion) {
 		this.nroAsiento = nroAsiento;
 		this.precio = precio;
 		this.seccion = seccion;
+		this.vendido = false;
 		this.ocupado = false;
 	}
 	
@@ -22,8 +24,16 @@ public class Asiento {
 		return seccion;
 	}
 	
-	//provisorio
-	public void desocupar() {
-		this.ocupado = false;
+	public boolean getVendido() {
+		return vendido;
 	}
+	
+	//provisorio
+	public void liberar() {
+		this.vendido = false;
+	}
+	public void vender() {
+		this.vendido = true;
+	}
+	
 }

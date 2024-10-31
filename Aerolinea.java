@@ -12,6 +12,7 @@ public class Aerolinea implements IAerolinea {
 	private Map<String, Aeropuerto> aeropuertos;
 	private Map<String, Vuelo> vuelos;
 	
+	
 	/*
 	es para la parte del enunciado que nos pide conocer el total recaudado dado un destino
 	private Map<String, double> recaudacionTotal;
@@ -81,7 +82,7 @@ public class Aerolinea implements IAerolinea {
 			throw new IllegalArgumentException("El aeropuerto de origen o destino no esta registrado");
 		}
 		
-		//se podria verificar que los destinos de la escala sean validos y algunas otras cosas
+		// Se podria verificar que los destinos de la escala sean validos y algunas otras cosas
 		
 		// Generar codigo del vuelo
 		int nroVuelo = vuelos.size() + 1;
@@ -112,6 +113,7 @@ public class Aerolinea implements IAerolinea {
 		return codVuelo;
 	}
 	
+	// Creo que esta bien, si se modifica algo sobre el manejo de asientos, hay que modificarlo
 	//ejercicio 7
 	@Override
 	public Map<Integer, String> asientosDisponibles(String codVuelo){
@@ -128,6 +130,7 @@ public class Aerolinea implements IAerolinea {
 	}
 	
 	//ejercicio 8
+	// Es una idea de como se deberia hacer ESTA MAL
 	@Override
 	public int venderPasaje(int dni, String codVuelo, int nroAsiento, boolean aOcupar) {
 	    if (!clientes.containsKey(dni)) {
@@ -137,19 +140,17 @@ public class Aerolinea implements IAerolinea {
 	        throw new IllegalArgumentException("El vuelo no existe.");
 	    }
 	    
-		//es una idea de como se deberia hacer
-		//la parte del pasaje era para ver si pasaba el test nada mas
+	    Vuelo vuelo = vuelos.get(codVuelo);
 	    
-//	    Vuelo vuelo = vuelos.get(codVuelo);
-//	    int numPasaje = 5;// Inicializar el número de pasaje
-//
-//	    if (vuelo instanceof VueloPublico) {
-//	        VueloPublico vueloPublico = (VueloPublico) vuelo; // Hacer cast a VueloPublico
-//	        numPasaje = vueloPublico.venderPasaje(numPasaje, dni, nroAsiento, aOcupar);
-//	    }
-//
-//	    return numPasaje;
-		return 0;
+	    // Es para ver si pasa el test
+	    int numPasaje = 0;
+
+	    if (vuelo instanceof VueloPublico) {
+	        VueloPublico vueloPublico = (VueloPublico) vuelo; // hacer cast a VueloPublico
+	        numPasaje = vueloPublico.venderPasaje(dni, nroAsiento, aOcupar);
+	    }
+
+	    return numPasaje;
 	}
     
 	//ejercicio 11
@@ -176,7 +177,7 @@ public class Aerolinea implements IAerolinea {
 	}
 	
 	@Override
-	// es provisorio, hay que modificarlo
+	// Es provisorio, hay que modificarlo
 	public void cancelarPasaje(int dni, String codVuelo, int nroAsiento) {
 	    if (!clientes.containsKey(dni)) {
 	        throw new IllegalArgumentException("El cliente no está registrado en el sistema.");
