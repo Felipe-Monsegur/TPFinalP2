@@ -235,7 +235,7 @@ public class Aerolinea implements IAerolinea {
 				Map<Integer, String> asientosDisp = vueloAlt.asientosDisponibles();
 	
 				for (Map.Entry<Integer, String> asiento : asientosDisp.entrySet()) {
-					if (vueloAlt.mismaOmejorSeccion(asiento.getKey(), Integer.parseInt(pasaje.getSeccion()))) {
+					if (vueloAlt.mismaOmejorSeccion(asiento.getKey(), convertirSeccionANumero(pasaje.getSeccion()))) {
 						try {
 							vueloAlt.venderPasaje(dniPasajero, asiento.getKey(), true);
 							reprogramado = true;
@@ -265,6 +265,15 @@ public class Aerolinea implements IAerolinea {
 			cliente.getNombre(),
 			cliente.getTelefono(),
 			resultado);
+	}
+
+	private int convertirSeccionANumero(String seccion) {
+		switch (seccion.toLowerCase()) {
+			case "turista": return 0;
+			case "ejecutivo": return 1;
+			case "primera clase": return 2;
+			default: throw new IllegalArgumentException("Sección desconocida: " + seccion);
+		}
 	}
 
 	// Ejercicio 14
