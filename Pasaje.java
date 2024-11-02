@@ -1,37 +1,38 @@
-
 public class Pasaje {
-    private int codigo;
-    private String seccion;
-    private double precio;
-    private int DNIcliente;
+	
+	//hay que modificar cosas
+	private int codigo;
+	private String seccion;
+	private double precio;
+	private int DNIcliente;
 
-	public Pasaje(int codigo, String seccion, double precio, int DNIcliente){
-		this.codigo =codigo;
-		this.seccion=seccion;
-		this.precio=precio;
-		this.DNIcliente= DNIcliente;
+	public Pasaje(int codigo, String seccion, double precio, int DNIcliente) {
+		this.codigo = codigo;
+		this.seccion = seccion;
+		this.precio = precio;
+		this.DNIcliente = DNIcliente;
 	}
 
-	
-    public int getCodigo() {
-        return codigo;
-    }
+	public int getCodigo() {
+		return codigo;
+	}
 
-    public String getSeccion() {
-        return seccion;
-    }
+	public String getSeccion() {
+		return seccion;
+	}
 
-    public double getPrecio() {
-        return precio;
-    }
+	public double getPrecio() {
+		return precio;
+	}
 
-    public int getDNIcliente() {
-        return DNIcliente;
-    }
+	public int getDNIcliente() {
+		return DNIcliente;
+	}
 
-    @Override
+	//ojo
+	@Override
 	public String toString() {
-		return getCodigo()+" - "+getDNIcliente()+" - "+getSeccion();
+		return getCodigo() + " - " + getDNIcliente() + " - " + getSeccion();
 	}
 
 }
