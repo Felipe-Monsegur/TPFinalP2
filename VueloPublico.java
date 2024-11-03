@@ -37,14 +37,12 @@ public class VueloPublico extends Vuelo {
 		return super.toString();
 	}
 	
-	// puede cambiar
-	public int venderPasaje(int dni, int nroAsiento, boolean aOcupar) {
-        // esto NO se cambia
+	// Función que se encarga de vender un pasaje y registrarlo en el vuelo
+	public void venderPasaje(int codigo, double precioPasaje, int dni, int nroAsiento, boolean aOcupar) {
 		if (!asientos.containsKey(nroAsiento)) {
             throw new IllegalArgumentException("El asiento no existe.");
         }
         Asiento asiento = asientos.get(nroAsiento);
-
         if (asiento.getVendido()) {
             throw new IllegalStateException("El asiento ya está vendido.");
         }
@@ -53,26 +51,26 @@ public class VueloPublico extends Vuelo {
             asiento.ocupar();
         }
         
-        // puede cambiar
-    	int nroPasaje = pasajes.size() + 1;
-        Pasaje pasaje = new Pasaje(nroPasaje, asiento.getSeccion(), asiento.getPrecio(), dni);
+        Pasaje pasaje = new Pasaje(codigo, asiento.getSeccion(), precioPasaje, dni);
         pasajes.put(nroAsiento, pasaje);  // Guardar pasaje por nroAsiento
-
-        return nroPasaje;
 	}
+
 	
-	// puede cambiar
+	// Funcion que se encarga de cancelar un pasaje
 	public void cancelarPasaje(int dni, int nroAsiento) {
-		// esto no se cambia
 		if(!asientos.containsKey(nroAsiento)) {
 			throw new IllegalArgumentException("El asiento no existe.");
 		}
-		Asiento asiento = asientos.get(nroAsiento);
-		asiento.liberar();
-		
-		// falta
+		Pasaje pasaje = pasajes.get(nroAsiento);
+		int dniComprador = pasaje.getDNIcliente();
+		if(dniComprador == dni) {
+			Asiento asiento = asientos.get(nroAsiento);
+			asiento.liberar();
+			pasajes.remove(nroAsiento);
+		}
 	}
 
+	// Funcion que devuelve un mapa con los asientos disponibles del vuelo
 	public Map<Integer, String> asientosDisponibles() {
         Map<Integer, String> asientosDisponibles = new HashMap<>();
         for (Asiento asiento : asientos.values()) {
@@ -83,20 +81,22 @@ public class VueloPublico extends Vuelo {
         return asientosDisponibles;
     }
 	
-	// puede cambiar
+	// se puede cambiar !!!!
 	public void asignarPasaje(int nroAsiento) {
 		Asiento asiento = asientos.get(nroAsiento);
 		asiento.vender();
 	}
 	
+	// Calcula el valor de un pasaje dado el nro de asiento que ocupa
 	public double calcularValorPasaje(int nroAsiento) {
 		Asiento asiento = asientos.get(nroAsiento);
-		double valor = asiento.getPrecio();
+		double valor = asiento.getPrecioBase();
 		valor += this.valorRefrigerio;
 		valor *= 1.2;
 		return valor;
 	}
 	
+	// Devuelve los pasajes del vuelo
 	public Map<Integer, Pasaje> getPasajes(){
 		return pasajes;
 	}

@@ -1,13 +1,13 @@
 public class Asiento {
 	private Integer nroAsiento;
-	private double precio;
+	private double precioBase;
 	private String seccion;
 	private boolean ocupado;
 	private boolean vendido;
 
-	public Asiento(Integer nroAsiento, double precio, String seccion) {
+	public Asiento(Integer nroAsiento, double precioBase, String seccion) {
 		this.nroAsiento = nroAsiento;
-		this.precio = precio;
+		this.precioBase = precioBase;
 		this.seccion = seccion;
 		this.vendido = false;
 		this.ocupado = false;
@@ -25,8 +25,8 @@ public class Asiento {
 		return seccion;
 	}
 
-	public Double getPrecio() {
-		return precio;
+	public Double getPrecioBase() {
+		return precioBase;
 	}
 
 	public boolean getVendido() {

@@ -12,6 +12,7 @@ public class Aerolinea implements IAerolinea {
 	private Map<Integer, Cliente> clientes;
 	private Map<String, Vuelo> vuelos;
 	private Map<String, Double> recaudacionPorDestino; // Mapa para almacenar la recaudación por destino
+	private static Integer pasajesVendidos = 0; // Variable global
 
 	// Ejercicio 1
 	public Aerolinea(String nombre, String CUIT) {
@@ -153,7 +154,13 @@ public class Aerolinea implements IAerolinea {
 			double valorPasaje = vueloPublico.calcularValorPasaje(nroAsiento);
 			recaudacionPorDestino.merge(destino, valorPasaje, Double::sum);
 			
-			return vueloPublico.venderPasaje(dni, nroAsiento, aOcupar);
+			// Genera el codigo de pasaje
+			pasajesVendidos++;
+			Integer codigoPasaje = pasajesVendidos;
+			
+			// Vende el pasaje
+			vueloPublico.venderPasaje(codigoPasaje, valorPasaje, dni, nroAsiento, aOcupar);	
+			return codigoPasaje;
 		}
 		throw new IllegalArgumentException("No es posible con vuelos privados.");
 	}
@@ -258,7 +265,8 @@ public class Aerolinea implements IAerolinea {
 	        // Si encuentra un asiento en la misma sección
 	        if (seccionPasaje.equals(seccionAsiento)) {
 	            // Asigna el asiento al pasaje y actualiza disponibilidad
-	            vuelo.asignarPasaje(numeroAsiento); // Esta parte se puede modificar según la lógica necesaria
+	        
+	            vuelo.asignarPasaje(numeroAsiento); // se puede cambiar !!!!
 	            return true;
 	        }
 	    }
@@ -311,4 +319,6 @@ public class Aerolinea implements IAerolinea {
 
 	    return sb.toString();
 	}
+	
+
 }

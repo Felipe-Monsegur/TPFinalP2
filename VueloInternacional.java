@@ -17,7 +17,7 @@ public class VueloInternacional extends VueloPublico {
 	
 	public double calcularValorPasaje(int nroAsiento) {
 		Asiento asiento = asientos.get(nroAsiento);
-		double valor = asiento.getPrecio();
+		double valor = asiento.getPrecioBase();
 		valor += this.valorRefrigerio * cantRefrigerios;
 		valor *= 1.2;
 		return valor;

@@ -1,10 +1,8 @@
 public class Pasaje {
-	
-	//hay que modificar cosas
 	private int codigo;
 	private String seccion;
-	private double precio;
 	private int DNIcliente;
+	private double precio;
 
 	public Pasaje(int codigo, String seccion, double precio, int DNIcliente) {
 		this.codigo = codigo;
@@ -29,10 +27,9 @@ public class Pasaje {
 		return DNIcliente;
 	}
 
-	//ojo
 	@Override
 	public String toString() {
-		return getCodigo() + " - " + getDNIcliente() + " - " + getSeccion();
+		return getCodigo() + " - " + getSeccion() + " - " + getDNIcliente() + " - " + getPrecio();
 	}
 
 }

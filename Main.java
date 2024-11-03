@@ -35,11 +35,13 @@ public class Main {
         
         // Vender pasajes
         int codPasaje1 = aerolinea.venderPasaje(12345678, codVueloInternacional, 1, true);
-        int codPasaje2 = aerolinea.venderPasaje(87654321, codVueloInternacional, 2, true);
+        int codPasaje2 = aerolinea.venderPasaje(87654321, codVueloInternacional, 9, true);
         int codPasaje3 = aerolinea.venderPasaje(46343328, codVueloInternacional, 3, true);
         
-        Map<Integer, String> asientosDispo = aerolinea.asientosDisponibles(codVueloInternacional2);
-        System.out.println(asientosDispo);
+        System.out.println(codPasaje1);
+        System.out.println(codPasaje2);
+        System.out.println(codPasaje3);
+        
         
         Map<Integer, String> asientosDispo3 = aerolinea.asientosDisponibles(codVueloInternacional);
         System.out.println(asientosDispo3);
@@ -47,6 +49,7 @@ public class Main {
         List<String> vueloPasajes = aerolinea.cancelarVuelo(codVueloInternacional);
         System.out.println(vueloPasajes);	
         
+ 
 	}
 
 
