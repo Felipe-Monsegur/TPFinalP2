@@ -6,6 +6,7 @@ import java.util.Map;
 public class VueloPublico extends Vuelo {
 	private double valorRefrigerio;
 	private Map<Integer, Asiento> asientos;
+	public Map<Integer, Pasaje> pasajes;
 
 	// Creo que esto no es necesario
 	//private Map<Integer, Pasaje> pasajes;
@@ -19,6 +20,8 @@ public class VueloPublico extends Vuelo {
 		super(codigo, origen, destino, fecha, tripulantes);
 		this.valorRefrigerio = valorRefrigerio;
 		this.asientos = new HashMap<>();
+
+		this.pasajes = new HashMap<>();
 
 		int numeroAsiento = 1;
 		// Inicializar asientos para cada clase

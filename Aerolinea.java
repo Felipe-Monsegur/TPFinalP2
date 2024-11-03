@@ -184,25 +184,25 @@ public class Aerolinea implements IAerolinea {
 
 	// @Override
 	// // Es provisorio, hay que modificarlo
-	// public void cancelarPasaje(int dni, String codVuelo, int nroAsiento) {
-	// 	if (!clientes.containsKey(dni)) {
-	// 		throw new IllegalArgumentException("El cliente no está registrado en el sistema.");
-	// 	}
-	// 	if (!vuelos.containsKey(codVuelo)) {
-	// 		throw new IllegalArgumentException("El vuelo no existe.");
-	// 	}
-	// 	Vuelo vuelo = vuelos.get(codVuelo);
-	// 	if (!(vuelo instanceof VueloPublico)) {
-	// 		throw new IllegalArgumentException(
-	// 				"El vuelo no es de tipo público y no permite cancelaciones de esta manera.");
-	// 	}
+	public void cancelarPasaje(int dni, String codVuelo, int nroAsiento) {
+		if (!clientes.containsKey(dni)) {
+			throw new IllegalArgumentException("El cliente no está registrado en el sistema.");
+		}
+		if (!vuelos.containsKey(codVuelo)) {
+			throw new IllegalArgumentException("El vuelo no existe.");
+		}
+		Vuelo vuelo = vuelos.get(codVuelo);
+		if (!(vuelo instanceof VueloPublico)) {
+			throw new IllegalArgumentException(
+					"El vuelo no es de tipo público y no permite cancelaciones de esta manera.");
+		}
 
-	// 	VueloPublico vueloPublico = (VueloPublico) vuelo;
-	// 	vueloPublico.cancelarPasaje(dni);
-	// }
+		VueloPublico vueloPublico = (VueloPublico) vuelo;
+		vueloPublico.cancelarPasaje(dni);
+	}
 
 	// Ejercicio 12
-	//Arreglar lo de liberar el asiento luego de cancelar el pasajr
+	// Arreglar lo de liberar el asiento luego de cancelar el pasajr
 	@Override
 	public void cancelarPasaje(int dni, int codPasaje) {
 		Cliente cliente = clientes.get(dni);
@@ -237,7 +237,7 @@ public class Aerolinea implements IAerolinea {
 
 		if (!pasajeEncontrado) {
 			throw new IllegalArgumentException(
-					"No se encontró el pasaje " + codPasaje + " para el cliente " + dni +);
+					"No se encontró el pasaje " + codPasaje + " para el cliente " + dni );
 		}
 	}
 
@@ -249,58 +249,64 @@ public class Aerolinea implements IAerolinea {
 		}
 
 		List<String> resultados = new ArrayList<>();
-		Vuelo vueloCancelado = vuelos.get(codVuelo);
-		String destinoCancelado = vueloCancelado.getDestino();
+		VueloPublico vueloCancelado = (VueloPublico) vuelos.get(codVuelo);
 		Map<Integer, Pasaje> pasajesAfectados = vueloCancelado.getPasajes();
 
-		List<VueloPublico> vuelosAlternativos = new ArrayList<>();
-		for (Map.Entry<String, Vuelo> entry : vuelos.entrySet()) {
-			if (!entry.getKey().equals(codVuelo) &&
-					entry.getValue().getDestino().equals(destinoCancelado) &&
-					entry.getValue() instanceof VueloPublico) {
-				vuelosAlternativos.add((VueloPublico) entry.getValue());
-			}
-		}
+		List<VueloPublico> vuelosAlternativos = obtenerVuelosAlternativos(codVuelo, vueloCancelado.getDestino());
 
 		for (Pasaje pasaje : pasajesAfectados.values()) {
-			boolean reprogramado = false;
 			int dniPasajero = pasaje.getDNIcliente();
 			Cliente cliente = clientes.get(dniPasajero);
-
-			for (VueloPublico vueloAlt : vuelosAlternativos) {
-				Map<Integer, String> asientosDisp = vueloAlt.asientosDisponibles();
-
-				for (Map.Entry<Integer, String> asiento : asientosDisp.entrySet()) {
-					if (vueloAlt.mismaOmejorSeccion(asiento.getKey(), convertirSeccionANumero(pasaje.getSeccion()))) {
-						try {
-							vueloAlt.venderPasaje(dniPasajero, asiento.getKey(), true);
-							reprogramado = true;
-							String registro = dniPasajero + " - " + cliente.getNombre() + " - " + cliente.getTelefono()
-									+ " - " + vueloAlt.getCodigo();
-							resultados.add(registro);
-							break;
-						} catch (Exception e) {
-							continue;
-						}
-					}
-				}
-				if (reprogramado)
-					break;
-			}
-
-			if (!reprogramado) {
-				String registro = dniPasajero + " - " + cliente.getNombre() + " - " + cliente.getTelefono()
-						+ " - CANCELADO";
-				resultados.add(registro);
-			}
+			String resultado = reprogramarPasajero(pasaje, vuelosAlternativos, cliente);
+			resultados.add(resultado);
 		}
 
-		// Elimina el vuelo cancelado
-		vuelos.remove(codVuelo);
+		vuelos.remove(codVuelo); // Eliminamos el vuelo cancelado.
 		return resultados;
 	}
 
+	// Método para obtener vuelos alternativos con el mismo destino
+	private List<VueloPublico> obtenerVuelosAlternativos(String codVuelo, String destinoCancelado) {
+		List<VueloPublico> vuelosAlternativos = new ArrayList<>();
+		for (Vuelo vuelo : vuelos.values()) {
+			if (!vuelo.getCodigo().equals(codVuelo) && vuelo.getDestino().equals(destinoCancelado)
+					&& vuelo instanceof VueloPublico) {
+				vuelosAlternativos.add((VueloPublico) vuelo);
+			}
+		}
+		return vuelosAlternativos;
+	}
 
+	// Método para intentar reprogramar un pasajero en vuelos alternativos
+	private String reprogramarPasajero(Pasaje pasaje, List<VueloPublico> vuelosAlternativos, Cliente cliente) {
+		int dniPasajero = pasaje.getDNIcliente();
+		boolean reprogramado = false;
+
+		for (VueloPublico vueloAlt : vuelosAlternativos) {
+			for (Map.Entry<Integer, String> asiento : vueloAlt.asientosDisponibles().entrySet()) {
+				if (vueloAlt.mismaOmejorSeccion(asiento.getKey(), convertirSeccionANumero(pasaje.getSeccion()))) {
+					try {
+						vueloAlt.venderPasaje(dniPasajero, asiento.getKey(), true);
+						return generarRegistro(dniPasajero, cliente, vueloAlt.getCodigo());
+					} catch (Exception e) {
+						continue; // intenta el proximo asiento
+					}
+				}
+			}
+		}
+
+		return generarRegistroCancelado(dniPasajero, cliente);
+	}
+
+	// metodos para generar registros de reprogramacion o cancelacion
+	private String generarRegistro(int dniPasajero, Cliente cliente, String codigoVuelo) {
+		return cliente.toString() + codigoVuelo;
+	}
+	private String generarRegistroCancelado(int dniPasajero, Cliente cliente) {
+		return cliente.toString() + " - CANCELADO";
+	}
+
+	//metodo para convertir la seccion a numero
 	private int convertirSeccionANumero(String seccion) {
 		switch (seccion.toLowerCase()) {
 			case "turista":
