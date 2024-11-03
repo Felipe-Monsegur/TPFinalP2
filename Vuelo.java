@@ -1,5 +1,4 @@
 public abstract class Vuelo {
-	
 	private String codigo;
 	private String origen;
 	private String destino;
@@ -13,11 +12,11 @@ public abstract class Vuelo {
 		this.fecha = fecha;
 		this.tripulantes = tripulantes;
 	}
-	
+
 	public String getOrigen() {
 		return origen;
 	}
-	
+
 	public String getDestino() {
 		return destino;
 	}
@@ -25,13 +24,13 @@ public abstract class Vuelo {
 	public String getFecha() {
 		return fecha;
 	}
-	
+
 	public String getCodigo() {
 		return codigo;
 	}
-	
+
 	public String toString() {
-		return getCodigo()+" - "+getOrigen()+" - "+getDestino()+" - "+getFecha();
+		return getCodigo() + " - " + getOrigen() + " - " + getDestino() + " - " + getFecha();
 	}
 
 }

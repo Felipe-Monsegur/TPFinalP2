@@ -26,12 +26,12 @@ public class Aerolinea implements IAerolinea {
 	// Ejercicio 2
 	@Override
 	public void registrarCliente(int dni, String nombre, String telefono) {
-		// Verificar si el cliente ya está registrado por su DNI
+		// Verifica si el cliente ya está registrado por su DNI
 		if (clientes.containsKey(dni)) {
 			throw new IllegalArgumentException("El cliente ya está registrado.");
 		}
 
-		// Crear un nuevo cliente
+		// Crea un nuevo cliente
 		Cliente cliente = new Cliente(dni, nombre, telefono);
 		clientes.put(dni, cliente);
 	}
@@ -58,15 +58,15 @@ public class Aerolinea implements IAerolinea {
 			throw new IllegalArgumentException("Los vuelos nacionales deben tener origen y destino en Argentina.");
 		}
 
-		// Generar codigo del vuelo
+		// Genera código del vuelo
 		int nroVuelo = vuelos.size() + 1;
 		String codVuelo = nroVuelo + "-PUB";
 
-		// Crear vuelo nacional
+		// Crea vuelo nacional
 		Vuelo vueloNacional = new VueloNacional(codVuelo, origen, destino, fecha, tripulantes, valorRefrigerio, precios,
 				cantAsientos);
 		
-		// Lo añado al registro
+		// Lo añade al registro
 		vuelos.put(codVuelo, vueloNacional);
 		return codVuelo;
 	}
@@ -79,15 +79,15 @@ public class Aerolinea implements IAerolinea {
 			throw new IllegalArgumentException("El aeropuerto de origen o destino no esta registrado");
 		}
 
-		// Generar codigo del vuelo
+		// Genera código del vuelo
 		int nroVuelo = vuelos.size() + 1;
 		String codVuelo = nroVuelo + "-PUB";
 
-		// Crear vuelo y añadirlo al registro
+		// Crea vuelo internacional
 		Vuelo vueloInternacional = new VueloInternacional(codVuelo, origen, destino, fecha, tripulantes, valorRefrigerio,
 				cantRefrigerios, precios, cantAsientos, escalas);
 
-		// Lo añado al registro
+		// Lo añade al registro
 		vuelos.put(codVuelo, vueloInternacional);
 		return codVuelo;
 	}
@@ -96,25 +96,25 @@ public class Aerolinea implements IAerolinea {
 	@Override
 	public String VenderVueloPrivado(String origen, String destino, String fecha, int tripulantes, double precio,
 			int dniComprador, int[] acompaniantes) {
-		// Validar aeropuertos para vuelos privados
+		// Valida aeropuertos para vuelos privados
 		if (!aeropuertos.containsKey(origen) || !aeropuertos.containsKey(destino)) {
 			throw new IllegalArgumentException("El aeropuerto de origen o destino no está registrado.");
 		}
 
-		// Generar código de vuelo privado
+		// Genera código de vuelo privado
 		int nroVuelo = vuelos.size() + 1;
 		String codVuelo = nroVuelo + "-PRI";
 
-		// Crear vuelo privado 
+		// Crea vuelo privado 
 		Vuelo vueloPrivado = new VueloPrivado(codVuelo, origen, destino, fecha, tripulantes, precio, dniComprador,
 				acompaniantes);
 		
-		// Calculo el valor total del vuelo y lo agrego a la recaudacion por destino
-		VueloPrivado vueloPriv = (VueloPrivado) vueloPrivado;
-		double valorTotal = vueloPriv.calcularValor();
+		// Calcula el valor total del vuelo y lo agrega a la recaudacion por destino
+		VueloPrivado vPrivado = (VueloPrivado) vueloPrivado; // Casteo
+		double valorTotal = vPrivado.calcularValor();
 		recaudacionPorDestino.merge(destino, valorTotal, Double::sum);
 		
-		// Lo añado al registro
+		// Lo añade al registro
 		vuelos.put(codVuelo, vueloPrivado);
 		return codVuelo;
 	}
@@ -143,12 +143,13 @@ public class Aerolinea implements IAerolinea {
 		if (!vuelos.containsKey(codVuelo)) {
 			throw new IllegalArgumentException("El vuelo no existe.");
 		}
-
+		
 		Vuelo vuelo = vuelos.get(codVuelo);
-		String destino = vuelo.getDestino();	
-
 		if (vuelo instanceof VueloPublico) {
-			VueloPublico vueloPublico = (VueloPublico) vuelo; // hacer cast a VueloPublico
+			VueloPublico vueloPublico = (VueloPublico) vuelo; // Casteo
+			
+			// Calcula el valor del pasaje y lo agrega a la recaudación por destino
+			String destino = vuelo.getDestino();	
 			double valorPasaje = vueloPublico.calcularValorPasaje(nroAsiento);
 			recaudacionPorDestino.merge(destino, valorPasaje, Double::sum);
 			
@@ -162,7 +163,7 @@ public class Aerolinea implements IAerolinea {
 	public List<String> consultarVuelosSimilares(String origen, String destino, String fecha) {
 		List<String> vuelosSimilares = new ArrayList<>();
 
-		// Paso la fecha a localDate para manejarla con las funciones propias de la clase
+		// Pasa la fecha a localDate para manejarla con las funciones propias de la clase
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDate fechaDada = LocalDate.parse(fecha, formatter);
 		LocalDate fechaLimite = fechaDada.plusDays(7);
@@ -212,12 +213,12 @@ public class Aerolinea implements IAerolinea {
 	    List<VueloPublico> vuelosAlternativos = obtenerVuelosAlternativos(codVuelo, destinoCancelado); 
 	    List<String> resultado = procesarPasajesAfectados(pasajesAfectados, vuelosAlternativos); 
 
-	    vuelos.remove(codVuelo); // Eliminar el vuelo cancelado
+	    vuelos.remove(codVuelo); // Elimina el vuelo cancelado
 
 	    return resultado;
 	}
 
-	// Funcion auxiliar para obtener vuelos alternativos con el mismo destino
+	// Función auxiliar para obtener vuelos alternativos con el mismo destino
 	private List<VueloPublico> obtenerVuelosAlternativos(String codVuelo, String destinoCancelado) {
 	    List<VueloPublico> vuelosAlternativos = new ArrayList<>();
 	    for (Vuelo vuelo : vuelos.values()) {
@@ -229,7 +230,7 @@ public class Aerolinea implements IAerolinea {
 	    return vuelosAlternativos;
 	}
 
-	// Funcion auxiliar para procesar los pasajes afectados por la cancelacion del vuelo
+	// Función auxiliar para procesar los pasajes afectados por la cancelación del vuelo
 	private List<String> procesarPasajesAfectados(Map<Integer, Pasaje> pasajesAfectados, List<VueloPublico> vuelosAlternativos) {
 	    List<String> resultado = new ArrayList<>();
 
@@ -240,7 +241,7 @@ public class Aerolinea implements IAerolinea {
 	    return resultado;
 	}
 
-	// Funcion auxiliar para intentar reprogramar un pasaje en un vuelo alternativo
+	// Función auxiliar para intentar reprogramar un pasaje en un vuelo alternativo
 	private String reprogramarPasaje(Pasaje pasaje, List<VueloPublico> vuelosAlternativos) {
 	    int dni = pasaje.getDNIcliente();
 	    Cliente cliente = clientes.get(dni);
@@ -249,11 +250,11 @@ public class Aerolinea implements IAerolinea {
 	        	return cliente.toString() + " - " + vueloAlternativo.getCodigo();
 	        }
 	    }
-	    // Si no se pudo reprogramar, devolver el formato de cancelacion
+	    // Si no se pudo reprogramar, devuelve el formato de cancelación
 	    return cliente.toString() + " - " + "CANCELADO";
 	}
 
-	// Funcion auxiliar para intentar asignar un asiento en la misma seccion
+	// Función auxiliar para intentar asignar un asiento en la misma sección
 	private boolean asignarAsientoEnVuelo(Pasaje pasaje, VueloPublico vuelo) {
 	    String seccionPasaje = pasaje.getSeccion();
 	    Map<Integer, String> asientos = vuelo.asientosDisponibles();
@@ -262,16 +263,16 @@ public class Aerolinea implements IAerolinea {
 	        int numeroAsiento = entry.getKey();
 	        String seccionAsiento = entry.getValue();
 
-	        // Si encontramos un asiento en la misma seccion
+	        // Si encuentra un asiento en la misma seccion
 	        if (seccionPasaje.equals(seccionAsiento)) {
-	            // Asignamos el asiento al pasaje y actualizamos disponibilidad
+	            // Asigna el asiento al pasaje y actualiza disponibilidad
 	        	
-	        	// esta parte se puede llegar a modificar !!!!
+	        	// ¡¡¡¡ esta parte se puede llegar a modificar !!!!
 	            vuelo.asignarPasaje(numeroAsiento); 
 	            return true;
 	        }
 	    }
-	    return false; // no se encontro asiento en la misma o mejor seccion
+	    return false; // No se encontró asiento en la misma sección
 	}
 	
 

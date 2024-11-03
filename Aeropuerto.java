@@ -18,10 +18,17 @@ public class Aeropuerto {
 	public String getPais() {
 		return pais;
 	}
-	
-	//ojo
+
+	public String getProvincia() {
+		return provincia;
+	}
+
+	public String getDireccion() {
+		return direccion;
+	}
+
 	@Override
 	public String toString() {
-		return getNombre() + " - " + getPais();
+		return getNombre() + " - " + getPais() + " - " + getProvincia() + " - " + getDireccion();
 	}
 }
