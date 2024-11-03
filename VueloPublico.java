@@ -2,8 +2,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class VueloPublico extends Vuelo {
-	private double valorRefrigerio;
-	private Map<Integer, Asiento> asientos;
+	protected double valorRefrigerio;
+	protected Map<Integer, Asiento> asientos;
 	private Map<Integer, Pasaje> pasajes;
 
 	public VueloPublico(String codigo, String origen, String destino, String fecha, int tripulantes,
@@ -83,9 +83,18 @@ public class VueloPublico extends Vuelo {
         return asientosDisponibles;
     }
 	
+	// puede cambiar
 	public void asignarPasaje(int nroAsiento) {
 		Asiento asiento = asientos.get(nroAsiento);
 		asiento.vender();
+	}
+	
+	public double calcularValorPasaje(int nroAsiento) {
+		Asiento asiento = asientos.get(nroAsiento);
+		double valor = asiento.getPrecio();
+		valor += this.valorRefrigerio;
+		valor *= 1.2;
+		return valor;
 	}
 	
 	public Map<Integer, Pasaje> getPasajes(){

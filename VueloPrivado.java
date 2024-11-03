@@ -4,8 +4,7 @@ public class VueloPrivado extends Vuelo {
 	private final static int capacidadMaxima = 15;
 	private int[] acompaniantes;
 	private int cantidadJets;
-	private double valor;
-
+	
 	public VueloPrivado(String codigo, String origen, String destino, String fecha, int tripulantes, double precio,
 			int dniComprador, int[] acompaniantes) {
 		super(codigo, origen, destino, fecha, tripulantes);
@@ -13,20 +12,21 @@ public class VueloPrivado extends Vuelo {
 		this.dniComprador = dniComprador;
 		this.acompaniantes = acompaniantes;
 
-		// calcular cantidad de jets necesarios y el costo total del vuelo privado
+		// calcular cantidad de jets necesarios
 		int totalPasajeros = 1 + acompaniantes.length; // incluye al comprador
 		this.cantidadJets = (int) Math.ceil((double) totalPasajeros / capacidadMaxima);
-		this.valor = this.cantidadJets * precioJet;
-	}
-
-	public double getValor() {
-		return valor;
 	}
 
 	public int getCantidadJets() {
 		return cantidadJets;
 	}
 
+	// costo total del vuelo privado
+	public double calcularValor() {
+		double valor = this.cantidadJets * this.precioJet;
+		return valor * 1.3;
+	}
+	
 	@Override
 	public String toString() {
 		return super.toString() + " - PRIVADO (" + getCantidadJets() + ")";

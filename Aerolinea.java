@@ -11,14 +11,7 @@ public class Aerolinea implements IAerolinea {
 	private Map<Integer, Cliente> clientes;
 	private Map<String, Aeropuerto> aeropuertos;
 	private Map<String, Vuelo> vuelos;
-
-	/*
-	 * es para la parte del enunciado que nos pide conocer el total recaudado dado
-	 * un destino
-	 * private Map<String, double> recaudacionTotal;
-	 * String = nombre destino
-	 * double = precio total
-	 */
+	private Map<String, Double> recaudacionPorDestino; // Mapa para almacenar la recaudación por destino
 
 	// Ejercicio 1
 	public Aerolinea(String nombre, String CUIT) {
@@ -27,6 +20,7 @@ public class Aerolinea implements IAerolinea {
 		this.clientes = new HashMap<>();
 		this.aeropuertos = new HashMap<>();
 		this.vuelos = new HashMap<>();
+        this.recaudacionPorDestino = new HashMap<>();
 	}
 
 	// Ejercicio 2
@@ -68,10 +62,12 @@ public class Aerolinea implements IAerolinea {
 		int nroVuelo = vuelos.size() + 1;
 		String codVuelo = nroVuelo + "-PUB";
 
-		// Crear vuelo y añadirlo al registro
-		Vuelo vuelo = new VueloNacional(codVuelo, origen, destino, fecha, tripulantes, valorRefrigerio, precios,
+		// Crear vuelo nacional
+		Vuelo vueloNacional = new VueloNacional(codVuelo, origen, destino, fecha, tripulantes, valorRefrigerio, precios,
 				cantAsientos);
-		vuelos.put(codVuelo, vuelo);
+		
+		// Lo añado al registro
+		vuelos.put(codVuelo, vueloNacional);
 		return codVuelo;
 	}
 
@@ -88,9 +84,11 @@ public class Aerolinea implements IAerolinea {
 		String codVuelo = nroVuelo + "-PUB";
 
 		// Crear vuelo y añadirlo al registro
-		Vuelo vuelo = new VueloInternacional(codVuelo, origen, destino, fecha, tripulantes, valorRefrigerio,
+		Vuelo vueloInternacional = new VueloInternacional(codVuelo, origen, destino, fecha, tripulantes, valorRefrigerio,
 				cantRefrigerios, precios, cantAsientos, escalas);
-		vuelos.put(codVuelo, vuelo);
+
+		// Lo añado al registro
+		vuelos.put(codVuelo, vueloInternacional);
 		return codVuelo;
 	}
  
@@ -107,9 +105,16 @@ public class Aerolinea implements IAerolinea {
 		int nroVuelo = vuelos.size() + 1;
 		String codVuelo = nroVuelo + "-PRI";
 
-		// Crear vuelo privado y añadirlo al registro
+		// Crear vuelo privado 
 		Vuelo vueloPrivado = new VueloPrivado(codVuelo, origen, destino, fecha, tripulantes, precio, dniComprador,
 				acompaniantes);
+		
+		// Calculo el valor total del vuelo y lo agrego a la recaudacion por destino
+		VueloPrivado vueloPriv = (VueloPrivado) vueloPrivado;
+		double valorTotal = vueloPriv.calcularValor();
+		recaudacionPorDestino.merge(destino, valorTotal, Double::sum);
+		
+		// Lo añado al registro
 		vuelos.put(codVuelo, vueloPrivado);
 		return codVuelo;
 	}
@@ -140,9 +145,13 @@ public class Aerolinea implements IAerolinea {
 		}
 
 		Vuelo vuelo = vuelos.get(codVuelo);
+		String destino = vuelo.getDestino();	
 
 		if (vuelo instanceof VueloPublico) {
 			VueloPublico vueloPublico = (VueloPublico) vuelo; // hacer cast a VueloPublico
+			double valorPasaje = vueloPublico.calcularValorPasaje(nroAsiento);
+			recaudacionPorDestino.merge(destino, valorPasaje, Double::sum);
+			
 			return vueloPublico.venderPasaje(dni, nroAsiento, aOcupar);
 		}
 		throw new IllegalArgumentException("No es posible con vuelos privados.");
@@ -269,7 +278,8 @@ public class Aerolinea implements IAerolinea {
 	// Ejercicio 14
 	@Override
 	public double totalRecaudado(String destino) {
-		return 0;
+	    // Busca el destino en el mapa de recaudaciones. Si no existe, retorna 0.0
+	    return recaudacionPorDestino.getOrDefault(destino, 0.0);
 	}
 
 	// Ejercicio 15
