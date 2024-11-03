@@ -2,7 +2,6 @@ import java.util.List;
 import java.util.Map;
 public class Main {
 
-	//es para probar lo de cancelar vuelo no ma
 	public static void main(String[] args) {
         IAerolinea aerolinea = new Aerolinea("BondiJet", "30-12345678-9");
         
@@ -12,30 +11,43 @@ public class Main {
         aerolinea.registrarAeropuerto("Aeroparque", "Argentina", "Provincia de Buenos Aires", "Av. Costanera Rafael Obligado");
         aerolinea.registrarAeropuerto("Ezeiza", "Argentina", "Provincia de Buenos Aires", "Autopista Riccheri km 33.5");
         aerolinea.registrarAeropuerto("Bariloche", "Argentina", "Provincia de Río Negro", "Ruta Nacional 237");
-
         // Registrar aeropuertos internacionales (Europa y América)
         aerolinea.registrarAeropuerto("Charles de Gaulle", "Francia", "Departamento de Val-d'Oise", "95700 Roissy-en-France");
         aerolinea.registrarAeropuerto("JFK", "Estados Unidos", "Estado de Nueva York", "Queens, NY 11430");
 		aerolinea.registrarAeropuerto("Guarulhos", "Brasil", "São Paulo", "Rod. Hélio Smidt, s/n - Cumbica, Guarulhos");
-		aerolinea.registrarAeropuerto("Barajas", "España", "Madrid", "28042 Madrid");
-
-		double[] precios = { 15000.0, 30000.0, 50000.0 };
-		int[] cantAsientos = { 100, 30, 10 };
-		String[] escalas = { "JFK", "Charles de Gaulle" };
-		String codVuelo = aerolinea.registrarVueloPublicoInternacional("Ezeiza", "Barajas", "15/12/2024", 8, 2000, 3,
-				precios, cantAsientos, escalas);
-		
-	    for (int i = 1; i < 141; i++) {
-	        int dni = 10000000 + i; // Simplemente como ejemplo
-	        aerolinea.registrarCliente(dni, "Pasajero " + (i + 1), "011-1234-" + (5670 + i) ); // Registrar acompañante
-	        aerolinea.venderPasaje(dni, codVuelo, i, false);
-	    }
-	    
-	    double total = aerolinea.totalRecaudado("Barajas");
-	    System.out.println(total);
+        // Registrar clientes
+        aerolinea.registrarCliente(12345678, "Juan Perez", "011-1234-5678");
+        aerolinea.registrarCliente(87654321, "Ana Lopez", "011-8765-4321");
+        
+        aerolinea.registrarCliente(46343328, "Paula Moragues", "011-4402-4971");
+        
+ 
+        // Registrar un vuelo internacional con escalas
+        double[] preciosInternacional = {20000.0, 40000.0, 60000.0};
+        int[] cantAsientosInternacional = {200, 50, 10};
+        String[] escalas = {"Guarulhos", "JFK"};
+        String codVueloInternacional = aerolinea.registrarVueloPublicoInternacional("Ezeiza", "Charles de Gaulle", "20/11/2024", 12, 6000, 3, preciosInternacional, cantAsientosInternacional, escalas);
+        double[] preciosInternacional2 = {20000.0, 40000.0, 60000.0};
+        int[] cantAsientosInternacional2 = {2, 0, 0};
+        String[] escalas2 = {"Guarulhos", "JFK"};
+        String codVueloInternacional2 = aerolinea.registrarVueloPublicoInternacional("Ezeiza", "Charles de Gaulle", "26/11/2024", 12, 6000, 3, preciosInternacional, cantAsientosInternacional2, escalas);
         
         
-
+        // Vender pasajes
+        int codPasaje1 = aerolinea.venderPasaje(12345678, codVueloInternacional, 1, true);
+        int codPasaje2 = aerolinea.venderPasaje(87654321, codVueloInternacional, 2, true);
+        int codPasaje3 = aerolinea.venderPasaje(46343328, codVueloInternacional, 3, true);
+        
+        Map<Integer, String> asientosDispo = aerolinea.asientosDisponibles(codVueloInternacional2);
+        System.out.println(asientosDispo);
+        
+        Map<Integer, String> asientosDispo3 = aerolinea.asientosDisponibles(codVueloInternacional);
+        System.out.println(asientosDispo3);
+        
+        List<String> vueloPasajes = aerolinea.cancelarVuelo(codVueloInternacional);
+        System.out.println(vueloPasajes);	
+        
 	}
+
 
 }

@@ -8,8 +8,8 @@ import java.util.HashMap;
 public class Aerolinea implements IAerolinea {
 	private String nombre;
 	private String CUIT;
-	private Map<Integer, Cliente> clientes;
 	private Map<String, Aeropuerto> aeropuertos;
+	private Map<Integer, Cliente> clientes;
 	private Map<String, Vuelo> vuelos;
 	private Map<String, Double> recaudacionPorDestino; // Mapa para almacenar la recaudación por destino
 
@@ -208,30 +208,18 @@ public class Aerolinea implements IAerolinea {
 	    VueloPublico vueloCancelado = (VueloPublico) vuelo; // Casteo
 
 	    Map<Integer, Pasaje> pasajesAfectados = vueloCancelado.getPasajes();
-	    String destinoCancelado = vueloCancelado.getDestino();
 	    
-	    List<VueloPublico> vuelosAlternativos = obtenerVuelosAlternativos(codVuelo, destinoCancelado); 
-	    List<String> resultado = procesarPasajesAfectados(pasajesAfectados, vuelosAlternativos); 
-
+	    List<String> vuelosAlternativos = consultarVuelosSimilares(vuelo.getOrigen(), vuelo.getDestino(), vuelo.getFecha());
+	    vuelosAlternativos.remove(codVuelo); 
+	    
+	    List<String> resultado = procesarPasajesAfectados(pasajesAfectados, vuelosAlternativos);
 	    vuelos.remove(codVuelo); // Elimina el vuelo cancelado
 
 	    return resultado;
 	}
 
-	// Función auxiliar para obtener vuelos alternativos con el mismo destino
-	private List<VueloPublico> obtenerVuelosAlternativos(String codVuelo, String destinoCancelado) {
-	    List<VueloPublico> vuelosAlternativos = new ArrayList<>();
-	    for (Vuelo vuelo : vuelos.values()) {
-	        if (!vuelo.getCodigo().equals(codVuelo) && vuelo.getDestino().equals(destinoCancelado) &&
-	            vuelo instanceof VueloPublico) {
-	                vuelosAlternativos.add((VueloPublico) vuelo);
-	        }
-	    }
-	    return vuelosAlternativos;
-	}
-
 	// Función auxiliar para procesar los pasajes afectados por la cancelación del vuelo
-	private List<String> procesarPasajesAfectados(Map<Integer, Pasaje> pasajesAfectados, List<VueloPublico> vuelosAlternativos) {
+	private List<String> procesarPasajesAfectados(Map<Integer, Pasaje> pasajesAfectados, List<String> vuelosAlternativos) {
 	    List<String> resultado = new ArrayList<>();
 
 	    for (Pasaje pasaje : pasajesAfectados.values()) {
@@ -242,16 +230,20 @@ public class Aerolinea implements IAerolinea {
 	}
 
 	// Función auxiliar para intentar reprogramar un pasaje en un vuelo alternativo
-	private String reprogramarPasaje(Pasaje pasaje, List<VueloPublico> vuelosAlternativos) {
+	private String reprogramarPasaje(Pasaje pasaje, List<String> vuelosAlternativos) {
 	    int dni = pasaje.getDNIcliente();
 	    Cliente cliente = clientes.get(dni);
-		for (VueloPublico vueloAlternativo : vuelosAlternativos) {
+	    StringBuilder resultado = new StringBuilder(cliente.toString());
+
+	    for (String codigoVueloAlternativo : vuelosAlternativos) {
+	        VueloPublico vueloAlternativo = (VueloPublico) vuelos.get(codigoVueloAlternativo);
 	        if (asignarAsientoEnVuelo(pasaje, vueloAlternativo)) {
-	        	return cliente.toString() + " - " + vueloAlternativo.getCodigo();
+	            resultado.append(" - ").append(vueloAlternativo.getCodigo());
+	            return resultado.toString();
 	        }
 	    }
-	    // Si no se pudo reprogramar, devuelve el formato de cancelación
-	    return cliente.toString() + " - " + "CANCELADO";
+	    resultado.append(" - CANCELADO");
+	    return resultado.toString();
 	}
 
 	// Función auxiliar para intentar asignar un asiento en la misma sección
@@ -263,18 +255,15 @@ public class Aerolinea implements IAerolinea {
 	        int numeroAsiento = entry.getKey();
 	        String seccionAsiento = entry.getValue();
 
-	        // Si encuentra un asiento en la misma seccion
+	        // Si encuentra un asiento en la misma sección
 	        if (seccionPasaje.equals(seccionAsiento)) {
 	            // Asigna el asiento al pasaje y actualiza disponibilidad
-	        	
-	        	// ¡¡¡¡ esta parte se puede llegar a modificar !!!!
-	            vuelo.asignarPasaje(numeroAsiento); 
+	            vuelo.asignarPasaje(numeroAsiento); // Esta parte se puede modificar según la lógica necesaria
 	            return true;
 	        }
 	    }
 	    return false; // No se encontró asiento en la misma sección
 	}
-	
 
 	// Ejercicio 14
 	@Override
@@ -293,5 +282,33 @@ public class Aerolinea implements IAerolinea {
 		}
 
 		return vuelo.toString();
+	}
+	
+	@Override 
+	public String toString() {
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("AEROLINEA: " + this.nombre + "\n");
+	    sb.append("CUIT: " + this.CUIT + "\n\n");
+
+	    sb.append("Aeropuertos: " + aeropuertos.size() + " registrados\n");
+	    
+	    for (Aeropuerto aeropuerto : aeropuertos.values()) {
+	        sb.append(aeropuerto.toString() + "\n");
+	    }
+	    sb.append("\n");  // Espacio adicional 
+
+	    sb.append("Clientes: " + clientes.size() + " registrados\n");
+	    for (Cliente cliente : clientes.values()) {
+	        sb.append(cliente.toString() + "\n");
+	    }
+	    sb.append("\n"); 
+
+	    sb.append("Vuelos: " + vuelos.size() + " registrados\n");
+	    for (Vuelo vuelo : vuelos.values()) {
+	        sb.append(vuelo.toString() + "\n");
+	    }
+	    sb.append("\n");  
+
+	    return sb.toString();
 	}
 }
