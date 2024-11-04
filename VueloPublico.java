@@ -32,11 +32,6 @@ public class VueloPublico extends Vuelo {
 		this.pasajes = new HashMap<>();
 	}
 	
-	@Override
-	public String toString() {
-		return super.toString();
-	}
-	
 	// Función que se encarga de vender un pasaje y registrarlo en el vuelo
 	public void venderPasaje(int codigo, double precioPasaje, int dni, int nroAsiento, boolean aOcupar) {
 		if (!asientos.containsKey(nroAsiento)) {
@@ -51,7 +46,7 @@ public class VueloPublico extends Vuelo {
             asiento.ocupar();
         }
         
-        Pasaje pasaje = new Pasaje(codigo, asiento.getSeccion(), precioPasaje, dni);
+        Pasaje pasaje = new Pasaje(codigo, nroAsiento, asiento.getSeccion(), precioPasaje, dni);
         pasajes.put(nroAsiento, pasaje);  // Guardar pasaje por nroAsiento
 	}
 
@@ -63,6 +58,7 @@ public class VueloPublico extends Vuelo {
 		}
 		Pasaje pasaje = pasajes.get(nroAsiento);
 		int dniComprador = pasaje.getDNIcliente();
+		
 		if(dniComprador == dni) {
 			Asiento asiento = asientos.get(nroAsiento);
 			asiento.liberar();
@@ -99,6 +95,11 @@ public class VueloPublico extends Vuelo {
 	// Devuelve los pasajes del vuelo
 	public Map<Integer, Pasaje> getPasajes(){
 		return pasajes;
+	}
+	
+	@Override
+	public String toString() {
+		return super.toString();
 	}
 
 }

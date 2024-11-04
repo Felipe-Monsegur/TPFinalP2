@@ -1,13 +1,15 @@
 public class Pasaje {
 	private int codigo;
+	private int nroAsiento;
 	private String seccion;
 	private int DNIcliente;
-	private double precio;
+	private double precioTotal;
 
-	public Pasaje(int codigo, String seccion, double precio, int DNIcliente) {
+	public Pasaje(int codigo, int nroAsiento, String seccion, double precioTotal, int DNIcliente) {
 		this.codigo = codigo;
+		this.nroAsiento = nroAsiento;
 		this.seccion = seccion;
-		this.precio = precio;
+		this.precioTotal = precioTotal;
 		this.DNIcliente = DNIcliente;
 	}
 
@@ -19,17 +21,22 @@ public class Pasaje {
 		return seccion;
 	}
 
-	public double getPrecio() {
-		return precio;
+	public double getPrecioTotal() {
+		return precioTotal;
 	}
 
 	public int getDNIcliente() {
 		return DNIcliente;
 	}
-
+	
+	public int getNroAsiento() {
+		return nroAsiento;
+	}
+	
 	@Override
 	public String toString() {
-		return getCodigo() + " - " + getSeccion() + " - " + getDNIcliente() + " - " + getPrecio();
+		return getCodigo() + " - " + getNroAsiento() + " - " + getSeccion() + " - " + getDNIcliente() + " - "
+				+ getPrecioTotal();
 	}
 
 }

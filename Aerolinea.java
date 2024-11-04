@@ -149,10 +149,8 @@ public class Aerolinea implements IAerolinea {
 		if (vuelo instanceof VueloPublico) {
 			VueloPublico vueloPublico = (VueloPublico) vuelo; // Casteo
 			
-			// Calcula el valor del pasaje y lo agrega a la recaudación por destino
-			String destino = vuelo.getDestino();	
+			// Calcula el valor del pasaje
 			double valorPasaje = vueloPublico.calcularValorPasaje(nroAsiento);
-			recaudacionPorDestino.merge(destino, valorPasaje, Double::sum);
 			
 			// Genera el codigo de pasaje
 			pasajesVendidos++;
@@ -160,6 +158,10 @@ public class Aerolinea implements IAerolinea {
 			
 			// Vende el pasaje
 			vueloPublico.venderPasaje(codigoPasaje, valorPasaje, dni, nroAsiento, aOcupar);	
+			// Lo agrega a la recaudación por destino
+			String destino = vuelo.getDestino();	
+			recaudacionPorDestino.merge(destino, valorPasaje, Double::sum);
+			
 			return codigoPasaje;
 		}
 		throw new IllegalArgumentException("No es posible con vuelos privados.");
