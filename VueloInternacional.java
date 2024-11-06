@@ -9,17 +9,19 @@ public class VueloInternacional extends VueloPublico {
 		this.cantRefrigerios = cantRefrigerios;
 		this.escalas = escalas;
 	}
-
+	
+	@Override
+	public double calcularValorPasaje(int nroAsiento) {
+		Asiento asiento = asientos.get(nroAsiento);
+		double valor = asiento.getPrecioBase();
+		valor += super.getValorRefrigerio() * cantRefrigerios;
+		valor *= 1.2;
+		return valor;
+	}
+	
 	@Override
 	public String toString() {
 		return super.toString() + " - INTERNACIONAL";
 	}
 	
-	public double calcularValorPasaje(int nroAsiento) {
-		Asiento asiento = asientos.get(nroAsiento);
-		double valor = asiento.getPrecioBase();
-		valor += this.valorRefrigerio * cantRefrigerios;
-		valor *= 1.2;
-		return valor;
-	}
 }

@@ -20,8 +20,10 @@ public class Main {
         aerolinea.registrarCliente(87654321, "Ana Lopez", "011-8765-4321");
         
         aerolinea.registrarCliente(46343328, "Paula Moragues", "011-4402-4971");
+        aerolinea.registrarCliente(46743328, "pepe", "011-4402-4971");
         
- 
+        aerolinea.registrarCliente(46748328, "marcelo", "011-4402-4971");
+        
         // Registrar un vuelo internacional con escalas
         double[] preciosInternacional = {20000.0, 40000.0, 60000.0};
         int[] cantAsientosInternacional = {200, 50, 10};
@@ -38,10 +40,14 @@ public class Main {
         int codPasaje2 = aerolinea.venderPasaje(87654321, codVueloInternacional, 9, true);
         int codPasaje3 = aerolinea.venderPasaje(46343328, codVueloInternacional, 3, true);
         
+        int codPasaje4 = aerolinea.venderPasaje(46743328, codVueloInternacional, 7, true);
+        int codPasaje5 = aerolinea.venderPasaje(46748328, codVueloInternacional, 2, true);
+        
         System.out.println(codPasaje1);
         System.out.println(codPasaje2);
         System.out.println(codPasaje3);
-        
+        System.out.println(codPasaje4);
+        System.out.println(codPasaje5);
         
         Map<Integer, String> asientosDispo3 = aerolinea.asientosDisponibles(codVueloInternacional);
         System.out.println(asientosDispo3);
@@ -49,7 +55,7 @@ public class Main {
         List<String> vueloPasajes = aerolinea.cancelarVuelo(codVueloInternacional);
         System.out.println(vueloPasajes);	
         
- 
+        
 	}
 
 

@@ -3,13 +3,11 @@ public class Pasaje {
 	private int nroAsiento;
 	private String seccion;
 	private int DNIcliente;
-	private double precioTotal;
 
-	public Pasaje(int codigo, int nroAsiento, String seccion, double precioTotal, int DNIcliente) {
+	public Pasaje(int codigo, int nroAsiento, String seccion, int DNIcliente) {
 		this.codigo = codigo;
 		this.nroAsiento = nroAsiento;
 		this.seccion = seccion;
-		this.precioTotal = precioTotal;
 		this.DNIcliente = DNIcliente;
 	}
 
@@ -19,10 +17,6 @@ public class Pasaje {
 
 	public String getSeccion() {
 		return seccion;
-	}
-
-	public double getPrecioTotal() {
-		return precioTotal;
 	}
 
 	public int getDNIcliente() {
@@ -35,8 +29,8 @@ public class Pasaje {
 	
 	@Override
 	public String toString() {
-		return getCodigo() + " - " + getNroAsiento() + " - " + getSeccion() + " - " + getDNIcliente() + " - "
-				+ getPrecioTotal();
+		return "[Código: " + getCodigo() + " / Número de asiento: " + getNroAsiento() + " / Sección: " + getSeccion() + 
+				" / DNI del cliente: " + getDNIcliente() + " ] ";
 	}
 
 }
