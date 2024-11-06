@@ -12,8 +12,8 @@ public class VueloPrivado extends Vuelo {
 		this.dniComprador = dniComprador;
 		this.acompaniantes = acompaniantes;
 
-		// calcular cantidad de jets necesarios
-		int totalPasajeros = 1 + acompaniantes.length; // incluye al comprador
+		// Calcular cantidad de jets necesarios
+		int totalPasajeros = 1 + acompaniantes.length; // Incluye al comprador
 		this.cantidadJets = (int) Math.ceil((double) totalPasajeros / capacidadMaxima);
 	}
 
@@ -21,7 +21,7 @@ public class VueloPrivado extends Vuelo {
 		return cantidadJets;
 	}
 
-	// costo total del vuelo privado
+	// Costo total del vuelo privado
 	public double calcularValor() {
 		double valor = this.cantidadJets * this.precioJet;
 		return valor * 1.3;

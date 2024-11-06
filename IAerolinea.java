@@ -150,4 +150,5 @@ public interface IAerolinea {
 	*   . 222-PRI - Ezeiza - Tierra del Fuego - 3/12/2024 - PRIVADO (3)
 	*/
 	String detalleDeVuelo(String codVuelo);
+	
 }

@@ -1,13 +1,13 @@
 public class Pasaje {
 	private int codigo;
+	private int nroAsiento;
 	private String seccion;
 	private int DNIcliente;
-	private double precio;
 
-	public Pasaje(int codigo, String seccion, double precio, int DNIcliente) {
+	public Pasaje(int codigo, int nroAsiento, String seccion, int DNIcliente) {
 		this.codigo = codigo;
+		this.nroAsiento = nroAsiento;
 		this.seccion = seccion;
-		this.precio = precio;
 		this.DNIcliente = DNIcliente;
 	}
 
@@ -19,17 +19,18 @@ public class Pasaje {
 		return seccion;
 	}
 
-	public double getPrecio() {
-		return precio;
-	}
-
 	public int getDNIcliente() {
 		return DNIcliente;
 	}
-
+	
+	public int getNroAsiento() {
+		return nroAsiento;
+	}
+	
 	@Override
 	public String toString() {
-		return getCodigo() + " - " + getSeccion() + " - " + getDNIcliente() + " - " + getPrecio();
+		return "[Código: " + getCodigo() + " / Número de asiento: " + getNroAsiento() + " / Sección: " + getSeccion() + 
+				" / DNI del cliente: " + getDNIcliente() + " ] ";
 	}
 
 }

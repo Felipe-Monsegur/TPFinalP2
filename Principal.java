@@ -71,6 +71,7 @@ public class Principal {
 
         // Cancelar un pasaje
         aerolinea.cancelarPasaje(12345678, codVueloNacional, 5);
+        
         System.out.println("Pasaje 1 cancelado. Asientos disponibles tras la cancelación: " + aerolinea.asientosDisponibles(codVueloNacional));
 
         // Consultar vuelos similares

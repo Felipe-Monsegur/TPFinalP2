@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class Aerolinea implements IAerolinea {
 	private String nombre;
@@ -149,17 +150,18 @@ public class Aerolinea implements IAerolinea {
 		if (vuelo instanceof VueloPublico) {
 			VueloPublico vueloPublico = (VueloPublico) vuelo; // Casteo
 			
-			// Calcula el valor del pasaje y lo agrega a la recaudación por destino
-			String destino = vuelo.getDestino();	
+			// Calcula el valor del pasaje
 			double valorPasaje = vueloPublico.calcularValorPasaje(nroAsiento);
-			recaudacionPorDestino.merge(destino, valorPasaje, Double::sum);
 			
 			// Genera el codigo de pasaje
-			pasajesVendidos++;
-			Integer codigoPasaje = pasajesVendidos;
+			Integer codigoPasaje = generarCodigoPasaje();
 			
 			// Vende el pasaje
-			vueloPublico.venderPasaje(codigoPasaje, valorPasaje, dni, nroAsiento, aOcupar);	
+			vueloPublico.venderPasaje(codigoPasaje, dni, nroAsiento, aOcupar);	
+			// Lo agrega a la recaudación por destino
+			String destino = vuelo.getDestino();	
+			recaudacionPorDestino.merge(destino, valorPasaje, Double::sum);
+			
 			return codigoPasaje;
 		}
 		throw new IllegalArgumentException("No es posible con vuelos privados.");
@@ -206,71 +208,70 @@ public class Aerolinea implements IAerolinea {
 	// Ejercicio 12-B
 	@Override
 	public void cancelarPasaje(int dni, int codPasaje) {
+	    if (!clientes.containsKey(dni)) {
+	        throw new IllegalArgumentException("El cliente no está registrado en el sistema.");
+	    }
+		for(Vuelo vuelo: vuelos.values()) {
+			VueloPublico vueloPublico = (VueloPublico) vuelo;
+			int contienePasaje = vueloPublico.contieneCodigoPasaje(dni, codPasaje);
+			
+			// Si contienePasaje devuelve un numero mayor a 0, significa que lo tiene y devuelve el num de asiento
+			if(contienePasaje > 0) {
+				// Llama a cancelarPasaje con el dni y el num de asiento correspondiente
+				vueloPublico.cancelarPasaje(dni, contienePasaje);
+			}	
+		}
 	}
 
 	// Ejercicio 13
 	@Override
 	public List<String> cancelarVuelo(String codVuelo) {
+	    if (!vuelos.containsKey(codVuelo)) {
+	        throw new IllegalArgumentException("El vuelo no existe.");
+	    }
+
 	    Vuelo vuelo = vuelos.get(codVuelo);
-	    VueloPublico vueloCancelado = (VueloPublico) vuelo; // Casteo
+	    VueloPublico vueloCancelado = (VueloPublico) vuelo;
 
 	    Map<Integer, Pasaje> pasajesAfectados = vueloCancelado.getPasajes();
-	    
 	    List<String> vuelosAlternativos = consultarVuelosSimilares(vuelo.getOrigen(), vuelo.getDestino(), vuelo.getFecha());
-	    vuelosAlternativos.remove(codVuelo); 
+	    vuelosAlternativos.remove(codVuelo);
+
+	    List<String> resultado = new ArrayList<>();
 	    
-	    List<String> resultado = procesarPasajesAfectados(pasajesAfectados, vuelosAlternativos);
+	    Iterator<Pasaje> iterator = pasajesAfectados.values().iterator();
+	    while (iterator.hasNext()) {
+	        Pasaje pasaje = iterator.next();
+	        String resultadoPasaje = reprogramarPasaje(pasaje, vuelosAlternativos);
+	        resultado.add(resultadoPasaje);
+	    }
+
 	    vuelos.remove(codVuelo); // Elimina el vuelo cancelado
 
 	    return resultado;
 	}
 
-	// Función auxiliar para procesar los pasajes afectados por la cancelación del vuelo
-	private List<String> procesarPasajesAfectados(Map<Integer, Pasaje> pasajesAfectados, List<String> vuelosAlternativos) {
-	    List<String> resultado = new ArrayList<>();
-
-	    for (Pasaje pasaje : pasajesAfectados.values()) {
-	        String resultadoPasaje = reprogramarPasaje(pasaje, vuelosAlternativos);
-	        resultado.add(resultadoPasaje);
-	    }
-	    return resultado;
-	}
-
-	// Función auxiliar para intentar reprogramar un pasaje en un vuelo alternativo
+	// funcion auxiliar para reprogramar un pasaje en algun vuelo similar 
 	private String reprogramarPasaje(Pasaje pasaje, List<String> vuelosAlternativos) {
 	    int dni = pasaje.getDNIcliente();
 	    Cliente cliente = clientes.get(dni);
+	    String seccion = pasaje.getSeccion();
+	    
 	    StringBuilder resultado = new StringBuilder(cliente.toString());
-
 	    for (String codigoVueloAlternativo : vuelosAlternativos) {
 	        VueloPublico vueloAlternativo = (VueloPublico) vuelos.get(codigoVueloAlternativo);
-	        if (asignarAsientoEnVuelo(pasaje, vueloAlternativo)) {
+	        if (vueloAlternativo.tieneDisponibleSeccion(seccion)) {
 	            resultado.append(" - ").append(vueloAlternativo.getCodigo());
+	            
+	            // agrega el pasaje al vuelo
+	        	int codigo = generarCodigoPasaje();
+	        	vueloAlternativo.asignarPasajeReprogramado(codigo, dni, seccion);
+	            
 	            return resultado.toString();
 	        }
 	    }
 	    resultado.append(" - CANCELADO");
 	    return resultado.toString();
-	}
-
-	// Función auxiliar para intentar asignar un asiento en la misma sección
-	private boolean asignarAsientoEnVuelo(Pasaje pasaje, VueloPublico vuelo) {
-	    String seccionPasaje = pasaje.getSeccion();
-	    Map<Integer, String> asientos = vuelo.asientosDisponibles();
-
-	    for (Map.Entry<Integer, String> entry : asientos.entrySet()) {
-	        int numeroAsiento = entry.getKey();
-	        String seccionAsiento = entry.getValue();
-
-	        // Si encuentra un asiento en la misma sección
-	        if (seccionPasaje.equals(seccionAsiento)) {
-	            // Asigna el asiento al pasaje y actualiza disponibilidad
-	        
-	            vuelo.asignarPasaje(numeroAsiento); // se puede cambiar !!!!
-	            return true;
-	        }
-	    }
-	    return false; // No se encontró asiento en la misma sección
 	}
 
 	// Ejercicio 14
@@ -291,7 +292,7 @@ public class Aerolinea implements IAerolinea {
 
 		return vuelo.toString();
 	}
-	
+
 	@Override 
 	public String toString() {
 	    StringBuilder sb = new StringBuilder();
@@ -319,6 +320,11 @@ public class Aerolinea implements IAerolinea {
 
 	    return sb.toString();
 	}
-	
+
+	private int generarCodigoPasaje() {
+		pasajesVendidos++;
+		int cod = pasajesVendidos;
+		return cod;
+	}
 
 }
