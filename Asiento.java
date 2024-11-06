@@ -45,5 +45,9 @@ public class Asiento {
 	public void ocupar() {
 		this.ocupado = true;
 	}
+	
+	public String toString() {
+		return getNroAsiento() + " - " + getPrecioBase() + " - " + getSeccion();
+	}
 
 }

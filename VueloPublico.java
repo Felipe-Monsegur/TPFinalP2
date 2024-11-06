@@ -1,7 +1,7 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class VueloPublico extends Vuelo {
+public abstract class VueloPublico extends Vuelo {
 	private double valorRefrigerio;
 	protected Map<Integer, Asiento> asientos;
 	private Map<Integer, Pasaje> pasajes;
@@ -79,7 +79,7 @@ public class VueloPublico extends Vuelo {
 	
 	// Si el vuelo contiene el pasaje con el codigo y el dni pasados por parametros, devuelve el numero de asiento,
 	// en caso contrario, devuelve 0
-	public int contienePasaje(int dniPasaje, int codPasaje) {
+	public int contieneCodigoPasaje(int dniPasaje, int codPasaje) {
 		for(Pasaje pasaje: pasajes.values()) {
 			int cod = pasaje.getCodigo();
 			int dni = pasaje.getDNIcliente();
@@ -102,16 +102,16 @@ public class VueloPublico extends Vuelo {
        return false;
     }
     
-    // asigna al sistema un pasaje reprogramado
+    // Agrega al sistema un pasaje reprogramado
     public void asignarPasajeReprogramado(int codigo, int dni, String seccion) {
         for (Asiento asiento : asientos.values()) {
             if (!asiento.getVendido() && asiento.getSeccion().equals(seccion)) {
           
+               	asiento.vender();
+               	
             	int nroAsiento = asiento.getNroAsiento();
             	Pasaje pasaje = new Pasaje(codigo, nroAsiento, seccion, dni);
             	pasajes.put(nroAsiento, pasaje);
-            	
-               	asiento.vender();
                	return;
             }
         }

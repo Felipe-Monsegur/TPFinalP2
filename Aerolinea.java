@@ -213,7 +213,7 @@ public class Aerolinea implements IAerolinea {
 	    }
 		for(Vuelo vuelo: vuelos.values()) {
 			VueloPublico vueloPublico = (VueloPublico) vuelo;
-			int contienePasaje = vueloPublico.contienePasaje(dni, codPasaje);
+			int contienePasaje = vueloPublico.contieneCodigoPasaje(dni, codPasaje);
 			
 			// Si contienePasaje devuelve un numero mayor a 0, significa que lo tiene y devuelve el num de asiento
 			if(contienePasaje > 0) {
@@ -261,9 +261,9 @@ public class Aerolinea implements IAerolinea {
 	    for (String codigoVueloAlternativo : vuelosAlternativos) {
 	        VueloPublico vueloAlternativo = (VueloPublico) vuelos.get(codigoVueloAlternativo);
 	        if (vueloAlternativo.tieneDisponibleSeccion(seccion)) {
-	   
 	            resultado.append(" - ").append(vueloAlternativo.getCodigo());
 	            
+	            // agrega el pasaje al vuelo
 	        	int codigo = generarCodigoPasaje();
 	        	vueloAlternativo.asignarPasajeReprogramado(codigo, dni, seccion);
 	            
@@ -292,7 +292,7 @@ public class Aerolinea implements IAerolinea {
 
 		return vuelo.toString();
 	}
-	
+
 	@Override 
 	public String toString() {
 	    StringBuilder sb = new StringBuilder();
@@ -320,7 +320,7 @@ public class Aerolinea implements IAerolinea {
 
 	    return sb.toString();
 	}
-	
+
 	private int generarCodigoPasaje() {
 		pasajesVendidos++;
 		int cod = pasajesVendidos;
